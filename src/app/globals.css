@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+/* ========================================
+   SQUARESHARE.TO — GLOBAL STYLES
+   ======================================== */
+
+/* Custom Theme Tokens */
+@theme {
+  --color-acid: #ff9900;
+  --color-acid-hover: #cc7a00;
+  --color-surface-dark: #000000;
+  --color-surface-light: #F9F9F9;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --shadow-btn-glow: 0 0 30px rgba(255, 153, 0, 0.3);
+}
+
+/* ========================================
+   BASE STYLES
+   ======================================== */
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #000000;
+  color: #ffffff;
+  overflow-x: hidden;
+}
+
+/* iOS zoom prevention for inputs */
+input[type="email"],
+input[type="text"],
+textarea {
+  font-size: 16px !important;
+}
+
+/* ========================================
+   CUSTOM SCROLLBAR
+   ======================================== */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333333;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ff9900;
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #333333 #000000;
+}
+
+/* ========================================
+   GRADIENT BLOB ANIMATION
+   ======================================== */
+
+@keyframes blob-drift {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+  25% {
+    transform: translate(-48%, -52%) scale(1.05) rotate(2deg);
+  }
+  50% {
+    transform: translate(-52%, -48%) scale(0.95) rotate(-1deg);
+  }
+  75% {
+    transform: translate(-50%, -50%) scale(1.02) rotate(1deg);
+  }
+}
+
+.animate-blob-drift {
+  animation: blob-drift 20s ease-in-out infinite;
+}
+
+/* ========================================
+   SELECTION STYLE
+   ======================================== */
+
+::selection {
+  background-color: var(--color-acid);
+  color: var(--color-surface-dark);
+}
+
+::-moz-selection {
+  background-color: var(--color-acid);
+  color: var(--color-surface-dark);
+}
+
+/* ========================================
+   FOOTER WORDMARK
+   ======================================== */
+
+.footer-wordmark {
+  color: #ffffff;
+}
