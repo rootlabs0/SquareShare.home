@@ -1,0 +1,60 @@
+.animated-gradient-text {
+  position: relative;
+  margin: 0 auto;
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  text-align: center;
+  font-weight: inherit;
+  overflow: visible;
+}
+
+.animated-gradient-text.with-border {
+  border-radius: 1.25rem;
+  padding: 0.35rem 0.75rem;
+  backdrop-filter: blur(10px);
+  transition: box-shadow 0.5s ease-out;
+}
+
+.gradient-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.gradient-overlay::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: inherit;
+  width: calc(100% - 2px);
+  height: calc(100% - 2px);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #120f17;
+  z-index: -1;
+}
+
+.text-content {
+  display: inline-block;
+  position: relative;
+  z-index: 2;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated-gradient-text .text-content,
+  .animated-gradient-text .gradient-overlay {
+    background-position: 50% 50% !important;
+  }
+}

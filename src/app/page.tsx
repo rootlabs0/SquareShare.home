@@ -3,6 +3,7 @@ import HeroSection from "@/components/HeroSection";
 import PurposeSection from "@/components/PurposeSection";
 import PixelTransition from "@/components/PixelTransition";
 import BentoGrid from "@/components/BentoGrid";
+import FeesSection from "@/components/FeesSection";
 import FounderSection from "@/components/FounderSection";
 import Footer from "@/components/Footer";
 
@@ -25,6 +26,9 @@ export default function Home() {
 
         {/* Transition 2: light → dark, the first transition rotated 180° (anchors linger at bottom) */}
         <PixelTransition direction="light-to-dark" />
+
+        {/* Fees: "fair and square" balance scale */}
+        <FeesSection />
 
         {/* Section 3: Founder Story & Final CTA */}
         <FounderSection />
