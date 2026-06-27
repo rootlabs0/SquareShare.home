@@ -4,11 +4,10 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { ROADMAP, EMBEDS } from "./future/data";
-import GroupIntro from "./future/GroupIntro";
+import { ROADMAP } from "./future/data";
 import RoadmapPanel from "./future/RoadmapPanel";
-import EmbedPanel from "./future/EmbedPanel";
-import TimelineNode from "./future/TimelineNode";
+import EmbedsSection from "./future/EmbedsSection";
+import PixelPath from "./future/PixelPath";
 import "./FutureSection.css";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -47,7 +46,10 @@ export default function FutureSection() {
             start: "top top",
             end: () => "+=" + distance(),
             pin: true,
-            scrub: 1,
+            // Tie the track directly to scroll position. A numeric scrub lags
+            // behind and, on a fast flick to the end, the leftover distance
+            // slides across as the section unpins (a visible jump).
+            scrub: true,
             invalidateOnRefresh: true,
             animation: gsap.to(trackEl, { x: () => -distance(), ease: "none" }),
             onUpdate: (self) => {
@@ -76,34 +78,36 @@ export default function FutureSection() {
     >
       <div ref={pin} className="future-pin relative">
         <div ref={track} className="future-track relative z-10">
+          {/* The weaving pixel path (horizontal mode) and a vertical pixel
+              spine (stack mode), behind the panels. */}
+          <PixelPath className="future-weave" />
+          <span aria-hidden="true" className="future-vline" />
+
+          {/* Leading breathing room so the intro is not flush to the viewport
+              edge the instant the horizontal scroll engages. */}
+          <div aria-hidden="true" className="future-edge" />
+
           {/* Intro panel */}
-          <article className="future-panel future-panel--intro flex flex-col px-8 py-14 md:px-10">
-            <div className="flex flex-1 flex-col justify-center">
-              <h2 className="font-display text-4xl font-black leading-[1.05] tracking-tight text-white md:text-6xl">
-                Where Square Share is going.
-              </h2>
-              <p className="mt-6 max-w-sm text-base leading-relaxed text-white/50 md:text-lg">
-                This is our direction, not our highlight reel. Everything here is
-                planned and on the way. None of it is live yet.
-              </p>
-            </div>
-            <TimelineNode />
+          <article className="future-panel future-panel--intro relative flex flex-col px-7 py-12">
+            <h2 className="font-display text-5xl font-black leading-[1.02] tracking-tight text-white md:text-7xl">
+              Where Square Share is going.
+            </h2>
+            <p className="mt-5 max-w-xs text-sm leading-relaxed text-white/50 md:text-base">
+              Everything here is planned, not live yet.
+            </p>
           </article>
 
-          {/* Sub-group 1: the roadmap */}
-          <GroupIntro kicker="The roadmap" title="Where we're headed." />
+          {/* The roadmap */}
           {ROADMAP.map((step) => (
             <RoadmapPanel key={step.num} step={step} />
           ))}
 
-          {/* Sub-group 2: future embeds */}
-          <GroupIntro
-            kicker="Future embeds"
-            title="We handle the database, you make it pretty."
-          />
-          {EMBEDS.map((item) => (
-            <EmbedPanel key={item.title} item={item} />
-          ))}
+          {/* Future embeds: one panel, a card per embed */}
+          <EmbedsSection />
+
+          {/* Trailing breathing room so the last panel stays on screen before
+              the scroll disengages. */}
+          <div aria-hidden="true" className="future-edge" />
         </div>
 
         {/* Horizontal-scroll progress (horizontal mode only, via CSS) */}

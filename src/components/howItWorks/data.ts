@@ -1,17 +1,7 @@
 // Data for the "How It Works" product walkthrough. Pure data, no "use client".
 //
-// Artifacts are real stock product photos bundled under /public/howitworks.
-// The shelf leans on clean tech goods with a few pops of greenery/plants.
-// Each grid slot is either a product image (with a span) or an empty dashed
-// "add an artifact" placeholder.
-
-export type ArtifactSpan = "1x1" | "2x1" | "1x2" | "2x2";
-
-export interface Artifact {
-  img?: string; // path under /howitworks, e.g. "/howitworks/product-01.jpg"
-  span?: ArtifactSpan; // defaults to "1x1"
-  empty?: boolean; // dashed "add an artifact here" slot
-}
+// Products are real stock photos bundled under /public/howitworks. The shelf
+// leans on clean tech goods with a few pops of greenery/plants.
 
 // Single source of truth for the product photos.
 export const PRODUCT_IMAGES = [
@@ -53,19 +43,8 @@ export const STOREFRONT_SLOTS: StoreSlot[] = [
   { id: "s6", img: p[4], col: 2, row: 3, cw: 1, rh: 1 }, // mouse
 ];
 
-// Compact published store used inside the embedded widget (steps 2 + 3).
-// Index 0 is the headphones the step-3 customer clicks and buys.
-export const WIDGET_GRID: Artifact[] = [
-  { img: p[1], span: "1x1" }, // headphones (the bought item)
-  { img: p[3], span: "1x1" }, // monstera (green)
-  { img: p[8], span: "1x1" }, // speaker
-  { img: p[5], span: "1x1" }, // smartwatch
-  { img: p[11], span: "1x1" }, // seedlings (green)
-  { img: p[7], span: "1x1" }, // keyboard
-];
-
-// The product the step-3 customer buys (matches WIDGET_GRID index 0).
-export const CHECKOUT_TARGET_INDEX = 0;
+// The product the step-3 customer clicks and buys. Its image matches the
+// headphones tile in STOREFRONT_SLOTS, so all three steps show one store.
 export const CHECKOUT_PRODUCT = {
   img: p[1],
   name: "Studio Headphones",
@@ -95,7 +74,7 @@ export const STEPS: Step[] = [
   {
     num: "02",
     eyebrow: "Embed anywhere",
-    title: "Drop two lines onto any site you already have.",
+    title: "Drop your storefront onto your site.",
     body: "Square Share generates one lightweight widget you paste into WordPress, Wix, or any HTML page. Your shelf goes live right where your audience already is, and you keep every customer.",
     mockup: "embed",
   },

@@ -1,57 +1,58 @@
 // Data for the "Future of Square Share" section. Pure data, no "use client".
 // Everything here is presented as planned, never as live. No dates anywhere.
-import { Mail, Download, Star, type LucideIcon } from "lucide-react";
 
-export const STATUS_LABEL = "Planned";
+export type RoadmapMock = "api" | "feed" | "docs";
 
 export interface RoadmapItem {
   num: string;
+  mock: RoadmapMock;
   title: string;
-  /** short muted clarifier under the title */
-  clarifier?: string;
   body: string;
 }
 
 export const ROADMAP: RoadmapItem[] = [
   {
     num: "01",
+    mock: "api",
     title: "The API",
-    clarifier: "Embeddable storefront",
-    body: "Drop your store into a site you already have. WordPress, Wix, anything. No rebuild, no new platform to learn.",
+    body: "Embed your store on any site you already have. One snippet drops a real checkout into WordPress, Wix, or plain HTML. No rebuild, no migration.",
   },
   {
     num: "02",
+    mock: "feed",
     title: "The marketplace",
-    clarifier: "Discovery feed",
-    body: "Get discovered by new buyers instead of only your own traffic. Buyers get one place to find indie work.",
+    body: "Get found by new buyers, not just your own traffic. A shared feed puts your products in front of people already shopping for indie work.",
   },
   {
     num: "03",
+    mock: "docs",
     title: "Docs & support",
-    body: "Solve any issue yourself, fast, without waiting on support.",
+    body: "Fix anything yourself, fast. Searchable docs and clear answers, so you are never stuck waiting on a support reply.",
   },
 ];
 
+export type EmbedKind = "email" | "delivery" | "reviews";
+
 export interface EmbedItem {
-  icon: LucideIcon;
+  kind: EmbedKind;
   title: string;
   body: string;
 }
 
 export const EMBEDS: EmbedItem[] = [
   {
-    icon: Mail,
+    kind: "email",
     title: "Email list",
-    body: "Collect and own your audience. Buyers auto-join at checkout, so your store grows your list.",
+    body: "Own your audience. Buyers auto-join at checkout.",
   },
   {
-    icon: Download,
+    kind: "delivery",
     title: "Digital delivery",
-    body: "Files and license keys sent automatically the moment someone buys.",
+    body: "Files and keys sent the moment they buy.",
   },
   {
-    icon: Star,
+    kind: "reviews",
     title: "Reviews",
-    body: "Collect buyer reviews and show them off. Social proof that sells the next buyer.",
+    body: "Proof that sells the next buyer.",
   },
 ];

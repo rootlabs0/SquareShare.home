@@ -22,15 +22,15 @@ export default function FounderSection() {
             Our Story
           </p>
           <h2 className="text-4xl md:text-6xl font-black text-neutral-900 leading-tight mb-8 font-display">
-            Built by Founders Who
+            We&apos;re sixteen.
             <br />
-            <span className="text-neutral-400">Refuse to Wait.</span>
+            <span className="text-neutral-400">And we were done waiting.</span>
           </h2>
           <div className="space-y-6 text-lg md:text-xl text-neutral-600 leading-relaxed">
             <p>
-              We&apos;re a team of 16-year-old builders who got tired of watching
-              creators get locked into platforms that take 30% cuts and own the
-              customer relationship.
+              We got tired of watching creators get locked into platforms that
+              take a 30% cut and own the customer relationship. Young enough to
+              question why it works that way, stubborn enough to fix it.
             </p>
             <p>
               Square Share was born from a simple frustration: why can&apos;t you sell

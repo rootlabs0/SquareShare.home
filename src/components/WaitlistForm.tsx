@@ -98,6 +98,8 @@ export default function WaitlistForm({ variant = "hero" }: WaitlistFormProps) {
             <PixelButton
               type="submit"
               disabled={status === "loading"}
+              hoverTextColor="#ffffff"
+              style={{ color: "#ffffff" }}
               className="px-8 py-4 text-base"
             >
               {status === "loading" ? (

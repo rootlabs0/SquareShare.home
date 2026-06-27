@@ -10,7 +10,7 @@ import {
 } from "framer-motion";
 import { CreditCard, Lock, Check } from "lucide-react";
 import CursorPointer from "./CursorPointer";
-import { WIDGET_GRID, CHECKOUT_TARGET_INDEX, CHECKOUT_PRODUCT } from "./data";
+import { STOREFRONT_SLOTS, CHECKOUT_PRODUCT } from "./data";
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const CUSTOMER = "#a855f7";
@@ -202,41 +202,48 @@ export default function CheckoutFlow() {
                 Powered by Square Share
               </span>
             </div>
-            <div className="grid grid-cols-3 auto-rows-[58px] gap-2">
-              {WIDGET_GRID.map((a, i) => {
-                const isTarget = i === CHECKOUT_TARGET_INDEX;
-                const cls =
-                  "relative overflow-hidden rounded-xl border border-neutral-200/80 bg-neutral-100";
-                const inner = (
-                  <>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={a.img}
-                      alt=""
-                      className="h-full w-full object-cover"
-                    />
-                    {isTarget && clicking && (
-                      <span className="absolute inset-0 rounded-xl ring-2 ring-[#a855f7]" />
-                    )}
-                  </>
-                );
-                return isTarget ? (
-                  <button
-                    key={i}
-                    ref={targetRef}
-                    type="button"
-                    aria-hidden="true"
-                    tabIndex={-1}
-                    className={`${cls} cursor-default`}
-                  >
-                    {inner}
-                  </button>
-                ) : (
-                  <div key={i} className={cls}>
-                    {inner}
-                  </div>
-                );
-              })}
+            <div className="aspect-[4/3] w-full">
+              <div className="grid h-full grid-cols-4 grid-rows-3 gap-2">
+                {STOREFRONT_SLOTS.map((s) => {
+                  const isTarget = s.img === CHECKOUT_PRODUCT.img;
+                  const style = {
+                    gridColumn: `${s.col} / span ${s.cw}`,
+                    gridRow: `${s.row} / span ${s.rh}`,
+                  };
+                  const cls =
+                    "relative overflow-hidden rounded-lg border border-neutral-200/70 bg-neutral-100";
+                  const inner = (
+                    <>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={s.img}
+                        alt=""
+                        className="h-full w-full object-cover"
+                      />
+                      {isTarget && clicking && (
+                        <span className="absolute inset-0 rounded-lg ring-2 ring-[#a855f7]" />
+                      )}
+                    </>
+                  );
+                  return isTarget ? (
+                    <button
+                      key={s.id}
+                      ref={targetRef}
+                      type="button"
+                      aria-hidden="true"
+                      tabIndex={-1}
+                      style={style}
+                      className={`${cls} cursor-default`}
+                    >
+                      {inner}
+                    </button>
+                  ) : (
+                    <div key={s.id} style={style} className={cls}>
+                      {inner}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>

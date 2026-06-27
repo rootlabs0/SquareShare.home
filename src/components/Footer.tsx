@@ -186,7 +186,7 @@ export default function Footer() {
             <div className="mt-12 border-t border-white/10 pt-6 md:mt-auto md:pt-24">
               <div className="flex flex-col items-center gap-2 text-sm sm:flex-row sm:justify-end sm:gap-6">
                 <span className="font-mono text-white/40">squareshare.to</span>
-                <p className="inline-flex items-center gap-1.5 text-white/40">
+                <p className="inline-flex flex-wrap items-center justify-center gap-x-1.5 gap-y-1 text-white/40">
                   Made with
                   <Heart
                     size={13}

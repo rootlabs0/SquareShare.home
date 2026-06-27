@@ -30,7 +30,7 @@ interface PixelButtonProps extends React.ComponentProps<"button"> {
   pixelSize?: number;
   /** Total time, in ms, for the sweep to cross the button. */
   sweepMs?: number;
-  /** How strongly the sweep follows the diagonal vs. the random scatter (0..1). */
+  /** How strongly the sweep follows the pointer-origin radial vs. the random scatter (0..1). */
   directionalWeight?: number;
 }
 
@@ -40,13 +40,33 @@ export default function PixelButton({
   hoverTextColor = "#a855f7",
   pixelSize = 13,
   sweepMs = 420,
-  directionalWeight = 0.6,
+  directionalWeight = 0.8,
   className,
   children,
   style,
+  onPointerEnter,
+  onPointerLeave,
+  onFocus,
+  onBlur,
   ...props
 }: PixelButtonProps) {
   const buttonRef = useRef<HTMLButtonElement>(null);
+
+  // Where the pixel sweep originates, as a fraction (0..1) of the button box.
+  // Set to the pointer's position on enter/leave so the reveal radiates from the
+  // exact point the cursor crossed — hovering in from the left vs. the right
+  // plays the animation from opposite sides, and it drains back out toward
+  // wherever the cursor leaves. Defaults to the left edge so the keyboard-focus
+  // sweep (which has no pointer) still reads as a left-to-right wipe.
+  const [origin, setOrigin] = useState({ fx: 0, fy: 0.5 });
+
+  // The reveal is driven from state (NOT CSS :hover) so that the origin and the
+  // opacity flip land in the *same* React commit. If the opacity were toggled by
+  // :hover, the browser would start the transition before the new per-pixel
+  // delays were applied, and the reveal-in would use the previous origin.
+  const [hovering, setHovering] = useState(false);
+  const [keyFocused, setKeyFocused] = useState(false);
+  const active = hovering || keyFocused;
 
   // Grid derived from the rendered size: the cell is a perfect square (height /
   // rows), and the width is snapped to a whole number of those squares so the
@@ -106,15 +126,42 @@ export default function PixelButton({
 
   const { cols, rows, cell } = grid;
 
-  // Per-pixel reveal delays: a left-to-right, slightly top-down diagonal blended
-  // with a seeded jitter so the edge looks broken up rather than a clean wipe.
+  // The pointer's position relative to the button, as a 0..1 fraction of each
+  // axis. Null until the button has a measured box.
+  const originFromEvent = (e: React.PointerEvent<HTMLButtonElement>) => {
+    const el = buttonRef.current;
+    if (!el) return null;
+    const rect = el.getBoundingClientRect();
+    if (!rect.width || !rect.height) return null;
+    return {
+      fx: Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width)),
+      fy: Math.min(1, Math.max(0, (e.clientY - rect.top) / rect.height)),
+    };
+  };
+
+  // Per-pixel reveal delays: a radial wipe emanating from the pointer origin
+  // (the cell nearest the cursor lights first, the farthest corner last) blended
+  // with a seeded jitter so the edge looks broken up rather than a clean front.
   const delays = useMemo(() => {
     const total = cols * rows;
+    // Origin in cell-grid units. Cells are square, so grid distance ∝ px distance
+    // and the wipe stays circular regardless of the button's aspect ratio.
+    const ox = origin.fx * cols;
+    const oy = origin.fy * rows;
+    // Normalise by the farthest corner so the sweep always spans the whole button
+    // in `sweepMs`, wherever it starts from.
+    const maxDist =
+      Math.max(
+        Math.hypot(ox, oy),
+        Math.hypot(cols - ox, oy),
+        Math.hypot(ox, rows - oy),
+        Math.hypot(cols - ox, rows - oy)
+      ) || 1;
     return Array.from({ length: total }, (_, i) => {
       const col = i % cols;
       const row = Math.floor(i / cols);
       const directional =
-        (col / Math.max(1, cols - 1)) * 0.8 + (row / Math.max(1, rows - 1)) * 0.2;
+        Math.hypot(col + 0.5 - ox, row + 0.5 - oy) / maxDist;
       const rand = seededRandom(i * 1.37 + 0.5);
       const progress = Math.min(
         1,
@@ -122,7 +169,7 @@ export default function PixelButton({
       );
       return Math.round(progress * sweepMs);
     });
-  }, [cols, rows, sweepMs, directionalWeight]);
+  }, [cols, rows, sweepMs, directionalWeight, origin]);
 
   return (
     <button
@@ -130,12 +177,12 @@ export default function PixelButton({
       data-slot="pixel-button"
       suppressHydrationWarning
       className={cn(
-        "group/pixel relative isolate inline-flex shrink-0 items-center justify-center overflow-hidden",
+        "relative isolate inline-flex shrink-0 items-center justify-center overflow-hidden",
         "border-2 font-black whitespace-nowrap select-none outline-none",
         "transition-transform duration-150 active:scale-95",
         "focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-black",
         "disabled:pointer-events-none disabled:opacity-50",
-        // motion-reduce: skip the pixels, just crossfade the background.
+        // motion-reduce: skip the pixels, just crossfade the label.
         "motion-reduce:transition-colors",
         className
       )}
@@ -149,6 +196,37 @@ export default function PixelButton({
         } as React.CSSProperties
       }
       {...props}
+      onPointerEnter={(e) => {
+        // Set origin + reveal in one batch so the delays are in place the moment
+        // the pixels start fading in — the sweep begins at the cursor.
+        const o = originFromEvent(e);
+        if (o) setOrigin(o);
+        setHovering(true);
+        onPointerEnter?.(e);
+      }}
+      onPointerLeave={(e) => {
+        // Re-origin at the exit point so the fill drains back out toward it.
+        const o = originFromEvent(e);
+        if (o) setOrigin(o);
+        setHovering(false);
+        onPointerLeave?.(e);
+      }}
+      onFocus={(e) => {
+        // Mirror the old :focus-visible reveal for keyboard users (no pointer, so
+        // the default left-edge origin is used). Ignore mouse-click focus.
+        let visible = true;
+        try {
+          visible = e.currentTarget.matches(":focus-visible");
+        } catch {
+          visible = true;
+        }
+        if (visible) setKeyFocused(true);
+        onFocus?.(e);
+      }}
+      onBlur={(e) => {
+        setKeyFocused(false);
+        onBlur?.(e);
+      }}
     >
       {/* Pixel sweep overlay — sits behind the label, clipped to the button.
           Fixed px tracks (not 1fr) keep every cell a perfect square. */}
@@ -163,15 +241,13 @@ export default function PixelButton({
         {delays.map((delay, i) => (
           <span
             key={i}
-            className={cn(
-              "opacity-0 transition-opacity ease-out",
-              "group-hover/pixel:opacity-100 group-focus-visible/pixel:opacity-100"
-            )}
+            className="transition-opacity ease-out"
             style={{
               backgroundColor: hoverColor,
               // 1px spread bleeds into neighbors to hide sub-pixel grid seams;
               // it rides the same opacity transition, so it's invisible at rest.
               boxShadow: `0 0 0 1px ${hoverColor}`,
+              opacity: active ? 1 : 0,
               transitionDuration: "150ms",
               transitionDelay: `${delay}ms`,
             }}
@@ -183,13 +259,16 @@ export default function PixelButton({
           crossfaded. A contrasting copy is always visible, so the text never
           drops to black-on-black mid-sweep (which read as a flicker/reload). */}
       <span className="relative z-10 grid place-items-center">
-        <span className="col-start-1 row-start-1 transition-opacity duration-300 ease-out group-hover/pixel:opacity-0 group-focus-visible/pixel:opacity-0">
+        <span
+          className="col-start-1 row-start-1 transition-opacity duration-300 ease-out"
+          style={{ opacity: active ? 0 : 1 }}
+        >
           {children}
         </span>
         <span
           aria-hidden="true"
-          className="col-start-1 row-start-1 opacity-0 transition-opacity duration-300 ease-out group-hover/pixel:opacity-100 group-focus-visible/pixel:opacity-100"
-          style={{ color: hoverTextColor }}
+          className="col-start-1 row-start-1 transition-opacity duration-300 ease-out"
+          style={{ color: hoverTextColor, opacity: active ? 1 : 0 }}
         >
           {children}
         </span>
