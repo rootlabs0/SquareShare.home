@@ -14,7 +14,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
             className="group flex items-center gap-2.5"
             aria-label="Square Share home"
           >
-            <SquareShareLogo width={24} height={28} />
+            <SquareShareLogo width={26} height={26} className="text-white" />
             <span className="text-lg font-black uppercase tracking-tighter text-white">
               Square Share
             </span>

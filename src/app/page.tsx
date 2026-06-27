@@ -1,9 +1,8 @@
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import PurposeSection from "@/components/PurposeSection";
-import PixelTransition from "@/components/PixelTransition";
-import BentoGrid from "@/components/BentoGrid";
-import FeesSection from "@/components/FeesSection";
+import HowItWorks from "@/components/HowItWorks";
+import FutureSection from "@/components/FutureSection";
 import FounderSection from "@/components/FounderSection";
 import Footer from "@/components/Footer";
 
@@ -18,17 +17,12 @@ export default function Home() {
         {/* Purpose: one-sentence mission with gradient wave text */}
         <PurposeSection />
 
-        {/* Transition 1: dark → light, dissolves upward (anchors linger at top) */}
-        <PixelTransition direction="dark-to-light" />
+        {/* Section 2: White Product Demo — the header reveals from a dark pixel
+            curtain (see PixelReveal), bridging the dark section above. */}
+        <HowItWorks />
 
-        {/* Section 2: White Product Demo */}
-        <BentoGrid />
-
-        {/* Transition 2: light → dark, the first transition rotated 180° (anchors linger at bottom) */}
-        <PixelTransition direction="light-to-dark" />
-
-        {/* Fees: "fair and square" balance scale */}
-        <FeesSection />
+        {/* The Future — roadmap + planned embeds */}
+        <FutureSection />
 
         {/* Section 3: Founder Story & Final CTA */}
         <FounderSection />

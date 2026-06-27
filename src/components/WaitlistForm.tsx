@@ -58,12 +58,12 @@ export default function WaitlistForm({ variant = "hero" }: WaitlistFormProps) {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
-            className="text-center py-6 px-8 border-2 border-[#ff9900] bg-[#ff9900]/10"
+            className="text-center py-6 px-8 border-2 border-[#a855f7] bg-[#a855f7]/10"
           >
-            <p className="text-[#ff9900] font-bold text-lg flex items-center justify-center gap-2">
+            <p className="text-[#a855f7] font-bold text-lg flex items-center justify-center gap-2">
               You&apos;re on the list! <PartyPopper size={20} />
             </p>
-            <p className="text-sm mt-1 text-white/50">
+            <p className={cn("text-sm mt-1", isFooter ? "text-neutral-500" : "text-white/50")}>
               We&apos;ll hit you up when it&apos;s go time.
             </p>
           </motion.div>
@@ -87,7 +87,10 @@ export default function WaitlistForm({ variant = "hero" }: WaitlistFormProps) {
               placeholder="Enter your email"
               aria-label="Email address"
               className={cn(
-                "flex-1 h-auto px-6 py-4 text-base font-medium bg-white/5 border-2 border-white/20 text-white placeholder:text-white/30 focus-visible:border-[#ff9900] focus-visible:ring-0",
+                "flex-1 h-auto px-6 py-4 text-base font-medium focus-visible:border-[#a855f7] focus-visible:ring-0",
+                isFooter
+                  ? "bg-white border-2 border-neutral-300 text-neutral-900 placeholder:text-neutral-400"
+                  : "bg-white/5 border-2 border-white/20 text-white placeholder:text-white/30",
                 status === "error" && "border-red-500"
               )}
               style={{ fontSize: "16px" }}

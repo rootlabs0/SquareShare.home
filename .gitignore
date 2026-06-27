@@ -41,6 +41,9 @@ yarn-error.log*
 .dev.vars
 .dev.vars.*
 
+# playwright mcp test artifacts
+.playwright-mcp/
+
 # local context & scratch notes
 context.md
 *.local.md

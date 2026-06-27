@@ -31,7 +31,7 @@ function resolveColor(input: string): string {
     const value = getComputedStyle(document.documentElement)
       .getPropertyValue(name)
       .trim();
-    return value || "#ff9900";
+    return value || "#a855f7";
   }
   return input;
 }

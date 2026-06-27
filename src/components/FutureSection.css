@@ -1,0 +1,69 @@
+/* Layout switch for the Future section.
+   Default (no JS, mobile, or reduced motion): a readable vertical stack.
+   .is-horizontal (desktop with motion allowed): a pinned horizontal track that
+   GSAP drives sideways as the user scrolls down. */
+
+.future-track {
+  display: flex;
+  flex-direction: column;
+}
+
+.future-panel {
+  position: relative;
+  width: 100%;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.future-track > .future-panel:first-child {
+  border-top: 0;
+}
+
+/* The pixel timeline: a dotted run of 3px squares the panels share. */
+.future-timeline-line {
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.25) 0,
+    rgba(255, 255, 255, 0.25) 3px,
+    transparent 3px,
+    transparent 9px
+  );
+}
+
+/* Affordances that only make sense in the horizontal mode. */
+.future-progress {
+  display: none;
+}
+
+.future-section.is-horizontal .future-pin {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.future-section.is-horizontal .future-track {
+  flex-direction: row;
+  width: max-content;
+  height: 100vh;
+  /* Center the band of panels in the pinned viewport so the cards are a
+     content-height row, not full-screen columns with empty space below. */
+  align-items: center;
+}
+
+.future-section.is-horizontal .future-panel {
+  flex: none;
+  width: clamp(18rem, 23vw, 20rem);
+  height: clamp(26rem, 62vh, 34rem);
+  border-top: 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.future-section.is-horizontal .future-track > .future-panel:first-child {
+  border-left: 0;
+}
+
+.future-section.is-horizontal .future-panel--intro {
+  width: clamp(20rem, 30vw, 28rem);
+}
+
+.future-section.is-horizontal .future-progress {
+  display: block;
+}

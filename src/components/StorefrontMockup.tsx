@@ -71,17 +71,17 @@ export default function StorefrontMockup() {
           {/* Product Grid */}
           <div className="grid grid-cols-2 gap-4">
             {/* Product 1 */}
-            <div className="border border-white/10 p-4 group hover:border-[#ff9900]/50 hover:bg-[#ff9900]/5 transition-all duration-500 cursor-pointer bg-white/5">
-              <div className="w-full aspect-square bg-black/50 mb-4 flex items-center justify-center border border-white/5 group-hover:border-[#ff9900]/30 transition-all duration-500">
-                <div className="w-12 h-12 border border-white/20 group-hover:border-[#ff9900] transition-colors" />
+            <div className="border border-white/10 p-4 group hover:border-[#a855f7]/50 hover:bg-[#a855f7]/5 transition-all duration-500 cursor-pointer bg-white/5">
+              <div className="w-full aspect-square bg-black/50 mb-4 flex items-center justify-center border border-white/5 group-hover:border-[#a855f7]/30 transition-all duration-500">
+                <div className="w-12 h-12 border border-white/20 group-hover:border-[#a855f7] transition-colors" />
               </div>
               <div className="text-white text-sm font-bold uppercase tracking-wide">Digital Asset</div>
               <div className="text-white font-mono text-sm mt-2">$49.00</div>
             </div>
             {/* Product 2 */}
-            <div className="border border-white/10 p-4 group hover:border-[#ff9900]/50 hover:bg-[#ff9900]/5 transition-all duration-500 cursor-pointer bg-white/5">
-              <div className="w-full aspect-square bg-black/50 mb-4 flex items-center justify-center border border-white/5 group-hover:border-[#ff9900]/30 transition-all duration-500">
-                <div className="w-12 h-12 border border-white/20 group-hover:border-[#ff9900] transition-colors rotate-45" />
+            <div className="border border-white/10 p-4 group hover:border-[#a855f7]/50 hover:bg-[#a855f7]/5 transition-all duration-500 cursor-pointer bg-white/5">
+              <div className="w-full aspect-square bg-black/50 mb-4 flex items-center justify-center border border-white/5 group-hover:border-[#a855f7]/30 transition-all duration-500">
+                <div className="w-12 h-12 border border-white/20 group-hover:border-[#a855f7] transition-colors rotate-45" />
               </div>
               <div className="text-white text-sm font-bold uppercase tracking-wide">Premium Course</div>
               <div className="text-white font-mono text-sm mt-2">$199.00</div>
@@ -89,7 +89,7 @@ export default function StorefrontMockup() {
           </div>
 
           {/* Checkout Button */}
-          <div className="w-full py-4 mt-4 bg-[#ff9900] text-black text-center font-black text-sm uppercase tracking-widest hover:bg-[#cc7a00] cursor-pointer transition-colors">
+          <div className="w-full py-4 mt-4 bg-[#a855f7] text-black text-center font-black text-sm uppercase tracking-widest hover:bg-[#9333ea] cursor-pointer transition-colors">
             Checkout $248.00
           </div>
         </div>

@@ -4,25 +4,24 @@ interface Props {
   height?: number;
 }
 
-export default function SquareShareLogo({ className, width = 28, height = 32 }: Props) {
+export default function SquareShareLogo({ className, width = 26, height = 26 }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 6 7"
+      viewBox="0 0 7 7"
       width={width}
       height={height}
       className={className}
+      fill="currentColor"
       shapeRendering="crispEdges"
       aria-hidden="true"
     >
-      {/* Left column — full height */}
-      <rect x="0" y="0" width="4" height="7" fill="var(--color-acid)" />
-      {/* Bottom-right foot — fills up to the notch */}
-      <rect x="4" y="3" width="2" height="4" fill="var(--color-acid)" />
-      {/* Top-right accent block */}
-      <rect x="4" y="0" width="2" height="2" fill="#0a0a0a" />
-      {/* Accent step beside the notch */}
-      <rect x="5" y="2" width="1" height="1" fill="#0a0a0a" />
+      {/* Three flush squares forming the L (square) */}
+      <rect x="0" y="1" width="3" height="3" />
+      <rect x="0" y="4" width="3" height="3" />
+      <rect x="3" y="4" width="3" height="3" />
+      {/* Fourth square, nudged up-right and disconnected (share) */}
+      <rect x="4" y="0" width="3" height="3" />
     </svg>
   );
 }

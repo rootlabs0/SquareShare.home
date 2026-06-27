@@ -1,10 +1,14 @@
 "use client";
 
 import * as React from "react";
-import { useMemo } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
-// Same deterministic hash used by PixelTransition, so the scatter is a designed
+// useLayoutEffect warns during SSR; fall back to useEffect on the server.
+const useIsoLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
+// Same deterministic hash used by PixelReveal, so the scatter is a designed
 // preset (identical every render) rather than truly random.
 function seededRandom(seed: number): number {
   const x = Math.sin(seed * 12.9898 + 4.1414) * 43758.5453;
@@ -18,9 +22,12 @@ interface PixelButtonProps extends React.ComponentProps<"button"> {
   hoverColor?: string;
   /** Label color while hovered (default keeps the base background visible). */
   hoverTextColor?: string;
-  /** Grid density. More = finer pixels. */
-  cols?: number;
-  rows?: number;
+  /**
+   * Side length, in CSS px, of one hover pixel. The button is snapped to a whole
+   * multiple of this in BOTH axes, so every grid cell is a perfect square — never
+   * a rectangle — regardless of the label width.
+   */
+  pixelSize?: number;
   /** Total time, in ms, for the sweep to cross the button. */
   sweepMs?: number;
   /** How strongly the sweep follows the diagonal vs. the random scatter (0..1). */
@@ -28,11 +35,10 @@ interface PixelButtonProps extends React.ComponentProps<"button"> {
 }
 
 export default function PixelButton({
-  baseColor = "#ff9900",
+  baseColor = "#a855f7",
   hoverColor = "#0a0a0a",
-  hoverTextColor = "#ff9900",
-  cols = 16,
-  rows = 4,
+  hoverTextColor = "#a855f7",
+  pixelSize = 13,
   sweepMs = 420,
   directionalWeight = 0.6,
   className,
@@ -40,6 +46,66 @@ export default function PixelButton({
   style,
   ...props
 }: PixelButtonProps) {
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  // Grid derived from the rendered size: the cell is a perfect square (height /
+  // rows), and the width is snapped to a whole number of those squares so the
+  // grid tiles the button exactly — no rectangles, whatever the label width.
+  const [grid, setGrid] = useState({ cols: 1, rows: 1, cell: pixelSize });
+
+  useIsoLayoutEffect(() => {
+    const el = buttonRef.current;
+    if (!el) return;
+
+    const measure = () => {
+      // Read the NATURAL layout size with our own width override removed, so the
+      // measurement never feeds back on the value we set (content width on a
+      // desktop row, full-bleed stretch in a mobile column).
+      el.style.width = "";
+      const cs = getComputedStyle(el);
+      const bL = parseFloat(cs.borderLeftWidth) || 0;
+      const bR = parseFloat(cs.borderRightWidth) || 0;
+      const bT = parseFloat(cs.borderTopWidth) || 0;
+      const bB = parseFloat(cs.borderBottomWidth) || 0;
+      const rect = el.getBoundingClientRect();
+      const w = rect.width - bL - bR; // padding box = the pixel grid's area
+      const h = rect.height - bT - bB;
+
+      // One square pixel = height / rows, so the rows fill the height exactly;
+      // then snap the width to a whole number of those squares.
+      const rows = Math.max(1, Math.round(h / pixelSize));
+      const cell = h / rows;
+      const cols = Math.max(1, Math.round(w / cell));
+      el.style.width = `${cols * cell + bL + bR}px`;
+
+      setGrid((prev) =>
+        prev.cols === cols &&
+        prev.rows === rows &&
+        Math.abs(prev.cell - cell) < 0.05
+          ? prev
+          : { cols, rows, cell }
+      );
+    };
+
+    measure();
+
+    let raf = 0;
+    const onResize = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(measure);
+    };
+    window.addEventListener("resize", onResize);
+    // Webfonts can change the label width after first paint; re-snap when ready.
+    document.fonts?.ready.then(() => measure()).catch(() => {});
+
+    return () => {
+      window.removeEventListener("resize", onResize);
+      cancelAnimationFrame(raf);
+    };
+  }, [pixelSize]);
+
+  const { cols, rows, cell } = grid;
+
   // Per-pixel reveal delays: a left-to-right, slightly top-down diagonal blended
   // with a seeded jitter so the edge looks broken up rather than a clean wipe.
   const delays = useMemo(() => {
@@ -48,7 +114,7 @@ export default function PixelButton({
       const col = i % cols;
       const row = Math.floor(i / cols);
       const directional =
-        (col / (cols - 1)) * 0.8 + (row / Math.max(1, rows - 1)) * 0.2;
+        (col / Math.max(1, cols - 1)) * 0.8 + (row / Math.max(1, rows - 1)) * 0.2;
       const rand = seededRandom(i * 1.37 + 0.5);
       const progress = Math.min(
         1,
@@ -60,7 +126,9 @@ export default function PixelButton({
 
   return (
     <button
+      ref={buttonRef}
       data-slot="pixel-button"
+      suppressHydrationWarning
       className={cn(
         "group/pixel relative isolate inline-flex shrink-0 items-center justify-center overflow-hidden",
         "border-2 font-black whitespace-nowrap select-none outline-none",
@@ -82,13 +150,14 @@ export default function PixelButton({
       }
       {...props}
     >
-      {/* Pixel sweep overlay — sits behind the label, clipped to the button. */}
+      {/* Pixel sweep overlay — sits behind the label, clipped to the button.
+          Fixed px tracks (not 1fr) keep every cell a perfect square. */}
       <span
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 -z-10 grid motion-reduce:hidden"
         style={{
-          gridTemplateColumns: `repeat(${cols}, 1fr)`,
-          gridTemplateRows: `repeat(${rows}, 1fr)`,
+          gridTemplateColumns: `repeat(${cols}, ${cell}px)`,
+          gridTemplateRows: `repeat(${rows}, ${cell}px)`,
         }}
       >
         {delays.map((delay, i) => (

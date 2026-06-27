@@ -1,8 +1,14 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
-import { Store, Heart } from "lucide-react";
+import { Heart, Mail } from "lucide-react";
 import PixelGrid from "./PixelGrid";
+
+// Background pixel-grid cell size; the social buttons are sized and snapped to
+// this so each one sits exactly on one grid square. Keep in sync with the
+// PixelGrid cellSize/gap props below.
+const GRID_CELL = 52;
 
 const footerLinks = [
   { label: "How It Works", href: "#features" },
@@ -15,98 +21,191 @@ const legalLinks = [
   { label: "Terms of Service", href: "/terms" },
 ];
 
+// Brand glyphs (simple-icons path data) — lucide dropped brand marks for
+// trademark reasons, so we inline the SVG paths here.
+const BRAND_PATHS = {
+  instagram:
+    "M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z",
+  youtube:
+    "M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z",
+  facebook:
+    "M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z",
+  github:
+    "M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222 0 1.606-.014 2.898-.014 3.293 0 .322.216.694.825.576C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12",
+} as const;
+
+const socialLinks = [
+  { label: "Instagram", href: "https://instagram.com/squareshare", path: BRAND_PATHS.instagram },
+  { label: "YouTube", href: "https://youtube.com/@squareshare", path: BRAND_PATHS.youtube },
+  { label: "Facebook", href: "https://facebook.com/squareshare", path: BRAND_PATHS.facebook },
+  { label: "GitHub", href: "https://github.com/squareshare", path: BRAND_PATHS.github },
+];
+
 export default function Footer() {
-  const year = new Date().getFullYear();
+  const footerRef = useRef<HTMLElement>(null);
+  const socialRef = useRef<HTMLDivElement>(null);
+
+  // Snap the social row onto the background grid. The grid is drawn on the
+  // canvas starting at its top-left, so we measure the row's offset from the
+  // canvas and nudge it to the nearest cell boundary on both axes.
+  useEffect(() => {
+    const footer = footerRef.current;
+    const social = socialRef.current;
+    if (!footer || !social) return;
+
+    const align = () => {
+      const canvas = footer.querySelector("canvas");
+      const origin = (canvas ?? footer).getBoundingClientRect();
+      social.style.transform = ""; // reset to read the natural position
+      const rect = social.getBoundingClientRect();
+      const offX = rect.left - origin.left;
+      const offY = rect.top - origin.top;
+      const dx = Math.round(offX / GRID_CELL) * GRID_CELL - offX;
+      const dy = Math.round(offY / GRID_CELL) * GRID_CELL - offY;
+      social.style.transform = `translate(${dx}px, ${dy}px)`;
+    };
+
+    align();
+    // Re-align after the first couple of frames and once webfonts settle —
+    // those reflows move the row without changing the footer's size, so the
+    // ResizeObserver alone would miss them and leave a stale offset.
+    const raf1 = requestAnimationFrame(align);
+    const raf2 = requestAnimationFrame(() => requestAnimationFrame(align));
+    document.fonts?.ready.then(align).catch(() => {});
+
+    // Watch the row's own size/position as well as the footer's, and catch
+    // browser-zoom / viewport changes via window resize.
+    const ro = new ResizeObserver(align);
+    ro.observe(footer);
+    ro.observe(social);
+    window.addEventListener("resize", align);
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+      ro.disconnect();
+      window.removeEventListener("resize", align);
+    };
+  }, []);
 
   return (
-    <footer className="relative isolate min-h-screen bg-black border-t border-white/10 overflow-hidden">
-      {/* Interactive pixel grid — lights up in acid near the cursor */}
-      <PixelGrid color="#ff9900" className="absolute inset-0 z-0" />
+    <footer
+      ref={footerRef}
+      className="relative isolate bg-black border-t border-white/10 overflow-hidden"
+    >
+      {/* Interactive pixel grid — lights up in acid near the cursor.
+          cellSize/gap are tuned so one lit square == one social button (48px). */}
+      <PixelGrid
+        color="#a855f7"
+        cellSize={52}
+        gap={4}
+        className="absolute inset-0 z-0"
+      />
 
       {/* Subtle seam fade so the brand row stays crisp against the section above */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-24 bg-gradient-to-b from-black to-transparent" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 pt-24 pb-10">
-        {/* Top row: brand + nav */}
-        <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
-          <div className="max-w-sm">
-            <a
-              href="#hero"
-              className="group inline-flex items-center gap-2.5"
-              aria-label="Square Share home"
-            >
-              <span className="flex h-8 w-8 items-center justify-center bg-acid text-black transition-colors duration-200 group-hover:bg-acid-hover">
-                <Store size={18} strokeWidth={2.5} />
-              </span>
-              <span className="text-lg font-black uppercase tracking-tighter text-white">
-                Square Share
-              </span>
-            </a>
-            <p className="mt-5 text-sm leading-relaxed text-white/40">
+        <div className="flex flex-col gap-12 md:flex-row md:items-stretch md:justify-between">
+          {/* Left: tagline above the giant wordmark */}
+          <div className="md:max-w-[58%]">
+            <p className="mb-8 max-w-sm text-sm leading-relaxed text-white/40">
               Turn any website into a store. Embed a portable storefront
               anywhere and own your revenue stream.
             </p>
+            <div
+              aria-hidden="true"
+              className="footer-wordmark select-none text-[clamp(2.5rem,11vw,9rem)] font-black uppercase leading-[0.82] tracking-tighter"
+            >
+              Square Share
+            </div>
           </div>
 
-          <div className="flex flex-col gap-10 sm:flex-row sm:gap-16">
-            <nav className="flex flex-col gap-3" aria-label="Explore">
-              {footerLinks.map((link) => (
+          {/* Right: nav columns at top, divider + credit pinned to the bottom */}
+          <div className="flex flex-col md:shrink-0">
+            <div className="flex flex-col gap-10 sm:flex-row sm:gap-12">
+              <nav className="flex flex-col gap-3" aria-label="Explore">
+                {footerLinks.map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    className="font-mono text-xs uppercase tracking-widest text-white/50 transition-colors duration-200 hover:text-acid"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </nav>
+              <nav className="flex flex-col gap-3" aria-label="Legal">
+                {legalLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="font-mono text-xs uppercase tracking-widest text-white/50 transition-colors duration-200 hover:text-acid"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </nav>
+              <div className="flex flex-col gap-3">
+                <span className="font-mono text-xs uppercase tracking-widest text-white/30">
+                  Contact
+                </span>
                 <a
-                  key={link.href}
-                  href={link.href}
-                  className="font-mono text-xs uppercase tracking-widest text-white/50 transition-colors duration-200 hover:text-acid"
+                  href="mailto:rootlabs0@gmail.com"
+                  className="group inline-flex items-center gap-2 font-mono text-xs tracking-widest text-white/50 transition-colors duration-200 hover:text-acid"
                 >
-                  {link.label}
+                  <Mail size={14} strokeWidth={2} className="shrink-0" />
+                  rootlabs0@gmail.com
                 </a>
-              ))}
-            </nav>
-            <nav className="flex flex-col gap-3" aria-label="Legal">
-              {legalLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="font-mono text-xs uppercase tracking-widest text-white/50 transition-colors duration-200 hover:text-acid"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
-        </div>
+                <div ref={socialRef} className="mt-6 flex items-center gap-1">
+                  {socialLinks.map(({ label, href, path }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={label}
+                      className="group flex h-12 w-12 items-center justify-center border border-white/10 text-white/50 transition-colors duration-200 hover:border-acid hover:bg-acid hover:text-black hover:shadow-[0_0_24px_-2px_rgba(168,85,247,0.55)]"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        width={18}
+                        height={18}
+                        fill="currentColor"
+                        aria-hidden="true"
+                        className="transition-transform duration-200 ease-out group-hover:scale-125"
+                      >
+                        <path d={path} />
+                      </svg>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
 
-        {/* Giant hollow wordmark — the pixel grid glows through it */}
-        <div
-          aria-hidden="true"
-          className="footer-wordmark mt-16 select-none text-[clamp(2.75rem,13vw,11rem)] font-black uppercase leading-[0.82] tracking-tighter"
-        >
-          Square Share
-        </div>
-
-        {/* Bottom bar */}
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-sm text-white/30 sm:flex-row">
-          <p>
-            &copy; {year} Square Share. All rights reserved.
-          </p>
-          <div className="flex flex-col items-center gap-2 sm:flex-row sm:gap-6">
-            <span className="font-mono text-white/40">squareshare.to</span>
-            <p className="inline-flex items-center gap-1.5 text-white/40">
-              Made with
-              <Heart
-                size={13}
-                aria-label="love"
-                className="fill-acid text-acid"
-              />
-              by the{" "}
-              <a
-                href="https://rootlabs.studio"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-semibold text-white/60 underline decoration-white/20 underline-offset-2 transition-colors duration-200 hover:text-acid hover:decoration-acid"
-              >
-                Root Labs
-              </a>{" "}
-              team
-            </p>
+            {/* Divider + credit, bottom-aligned with the wordmark */}
+            <div className="mt-12 border-t border-white/10 pt-6 md:mt-auto md:pt-24">
+              <div className="flex flex-col items-center gap-2 text-sm sm:flex-row sm:justify-end sm:gap-6">
+                <span className="font-mono text-white/40">squareshare.to</span>
+                <p className="inline-flex items-center gap-1.5 text-white/40">
+                  Made with
+                  <Heart
+                    size={13}
+                    aria-label="love"
+                    className="fill-acid text-acid"
+                  />
+                  and passion by the{" "}
+                  <a
+                    href="https://rootlabs.studio"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-white/60 underline decoration-white/20 underline-offset-2 transition-colors duration-200 hover:text-acid hover:decoration-acid"
+                  >
+                    Root Labs
+                  </a>{" "}
+                  team
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

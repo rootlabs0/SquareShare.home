@@ -42,6 +42,10 @@ interface SideRaysProps {
   blend?: number;
   falloff?: number;
   opacity?: number;
+  /** Degrees the ray fan continuously sweeps back and forth (0 = static). */
+  sweep?: number;
+  /** Speed of the sweep oscillation. */
+  sweepSpeed?: number;
   className?: string;
 }
 
@@ -57,6 +61,8 @@ const SideRays = ({
   blend = 0.75,
   falloff = 1.6,
   opacity = 1.0,
+  sweep = 0,
+  sweepSpeed = 0.4,
   className = "",
 }: SideRaysProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -141,6 +147,8 @@ uniform float iSaturation;
 uniform float iBlend;
 uniform float iFalloff;
 uniform float iOpacity;
+uniform float iSweep;
+uniform float iSweepSpeed;
 
 float rayStrength(vec2 raySource, vec2 rayRefDirection, vec2 coord, float seedA, float seedB, float speed) {
   vec2 sourceToCoord = coord - raySource;
@@ -160,7 +168,7 @@ void main() {
   vec2 coord = vec2(fragCoord.x, iResolution.y - fragCoord.y);
   vec2 rayPos = vec2(iResolution.x * 1.1, -0.5 * iResolution.y);
 
-  float tiltRad = iTilt * 3.14159265 / 180.0;
+  float tiltRad = (iTilt + iSweep * sin(iTime * iSweepSpeed)) * 3.14159265 / 180.0;
   float cs = cos(tiltRad);
   float sn = sin(tiltRad);
   vec2 rel = coord - rayPos;
@@ -202,6 +210,8 @@ void main() {
         iBlend: { value: blend },
         iFalloff: { value: falloff },
         iOpacity: { value: opacity },
+        iSweep: { value: sweep },
+        iSweepSpeed: { value: sweepSpeed },
       };
       uniformsRef.current = uniforms;
 
@@ -282,6 +292,8 @@ void main() {
     blend,
     falloff,
     opacity,
+    sweep,
+    sweepSpeed,
   ]);
 
   useEffect(() => {
@@ -300,6 +312,8 @@ void main() {
     u.iBlend.value = blend;
     u.iFalloff.value = falloff;
     u.iOpacity.value = opacity;
+    u.iSweep.value = sweep;
+    u.iSweepSpeed.value = sweepSpeed;
   }, [
     speed,
     rayColor1,
@@ -312,6 +326,8 @@ void main() {
     blend,
     falloff,
     opacity,
+    sweep,
+    sweepSpeed,
   ]);
 
   return (

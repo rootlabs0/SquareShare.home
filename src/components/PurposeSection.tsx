@@ -1,8 +1,69 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionTemplate,
+  MotionValue,
+} from "framer-motion";
+
+const PURPOSE_TEXT =
+  "We exist to give every creator the power to sell anywhere, on their own terms.";
+
+function Word({
+  children,
+  progress,
+  range,
+}: {
+  children: string;
+  progress: MotionValue<number>;
+  range: [number, number];
+}) {
+  const [start, end] = range;
+  const mid = (start + end) / 2;
+  const opacity = useTransform(progress, range, [0.15, 1]);
+  // `accent` rises to 1 while the word is actively appearing, and is 0 both
+  // before (greyed) and after (settled white). It drives the primary-color
+  // (--primary / #a855f7) gradient and the right-edge fringe.
+  const accent = useTransform(progress, [start, mid, end], [0, 1, 0]);
+  const weak = useTransform(accent, (v) => v * 0.4); // tint across the body
+  const strong = useTransform(accent, (v) => v); // fully saturated right edge
+  const fringe = useTransform(accent, (v) => v); // border on that edge
+  const glow = useTransform(accent, (v) => v * 0.7); // outer glow on that edge
+  // Bottom layer is solid white so glyphs are always fully painted; the top
+  // layer is transparent for the left, then ramps up to a saturated primary
+  // edge on the right. The drop-shadows add a primary fringe plus a soft glow.
+  const backgroundImage = useMotionTemplate`linear-gradient(90deg, rgba(168,85,247,0) 0%, rgba(168,85,247,0) 45%, rgba(192,132,252,${weak}) 78%, rgba(168,85,247,${strong}) 100%), linear-gradient(0deg, #ffffff, #ffffff)`;
+  const filter = useMotionTemplate`drop-shadow(2px 0 0.5px rgba(168,85,247,${fringe})) drop-shadow(0 0 6px rgba(168,85,247,${glow}))`;
+  return (
+    <span className="relative mr-[0.25em] inline-block">
+      <motion.span
+        className="bg-clip-text text-transparent"
+        style={{
+          opacity,
+          backgroundImage,
+          filter,
+          backgroundRepeat: "no-repeat, no-repeat",
+          WebkitTextFillColor: "transparent",
+        }}
+      >
+        {children}
+      </motion.span>
+    </span>
+  );
+}
 
 export default function PurposeSection() {
+  const containerRef = useRef<HTMLHeadingElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start 0.85", "end 0.55"],
+  });
+
+  const words = PURPOSE_TEXT.split(" ");
+
   return (
     <section
       id="purpose"
@@ -18,16 +79,20 @@ export default function PurposeSection() {
         >
           Our Purpose
         </motion.p>
-        <motion.h2
-          className="gradient-wave-text font-display text-3xl md:text-5xl lg:text-6xl font-black leading-[1.15] tracking-tight"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, delay: 0.1 }}
+        <h2
+          ref={containerRef}
+          className="font-display text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-[1.15] tracking-tight text-white"
         >
-          We exist to give every creator the power to sell anywhere,
-          on their own terms.
-        </motion.h2>
+          {words.map((word, i) => {
+            const start = i / words.length;
+            const end = (i + 1) / words.length;
+            return (
+              <Word key={i} progress={scrollYProgress} range={[start, end]}>
+                {word}
+              </Word>
+            );
+          })}
+        </h2>
       </div>
     </section>
   );
