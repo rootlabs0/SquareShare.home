@@ -322,7 +322,7 @@ function Handoff() {
 
     tick(); // set initial docked position before paint
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    window.addEventListener("resize", onScroll, { passive: true });
     const ro = new ResizeObserver(onScroll);
     ro.observe(container);
     return () => {

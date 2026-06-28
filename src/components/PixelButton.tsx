@@ -114,7 +114,7 @@ export default function PixelButton({
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(measure);
     };
-    window.addEventListener("resize", onResize);
+    window.addEventListener("resize", onResize, { passive: true });
     // Webfonts can change the label width after first paint; re-snap when ready.
     document.fonts?.ready.then(() => measure()).catch(() => {});
 

@@ -29,7 +29,7 @@ export default function Header() {
     >
       {/* Floating island — inset from every screen edge, never full-bleed */}
       <div
-        className={`mx-auto max-w-4xl overflow-hidden rounded-2xl border backdrop-blur-xl transition-colors duration-300 ${
+        className={`mx-auto max-w-4xl overflow-hidden rounded-2xl border backdrop-blur-md transition-colors duration-300 md:backdrop-blur-xl ${
           scrolled || menuOpen
             ? "border-white/15 bg-black/80 shadow-xl shadow-black/40"
             : "border-white/10 bg-black/50 shadow-lg shadow-black/20"

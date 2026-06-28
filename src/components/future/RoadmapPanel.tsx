@@ -11,7 +11,11 @@ export default function RoadmapPanel({ step }: { step: RoadmapItem }) {
   const Mock = MOCKS[step.mock];
 
   return (
-    <article className="future-panel relative flex flex-col px-7 py-12">
+    <article
+      className={`future-panel relative flex flex-col px-7 py-12 ${
+        step.mock === "feed" ? "future-panel--wide" : ""
+      }`}
+    >
       <h3 className="font-display text-3xl font-black leading-tight tracking-tight text-white">
         {step.title}
       </h3>

@@ -271,7 +271,13 @@ export default function StoreBuilder({
         className="pointer-events-none absolute left-0 top-0 z-20 overflow-hidden rounded-lg border border-neutral-200/70 bg-neutral-100 shadow-[0_12px_30px_-8px_rgba(0,0,0,0.3)]"
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img ref={floatImgRef} alt="" className="h-full w-full object-cover" />
+        <img
+          ref={floatImgRef}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className="h-full w-full object-cover"
+        />
       </div>
 
       {/* The build cursor. */}

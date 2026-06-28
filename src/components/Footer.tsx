@@ -78,7 +78,7 @@ export default function Footer() {
     const ro = new ResizeObserver(align);
     ro.observe(footer);
     ro.observe(social);
-    window.addEventListener("resize", align);
+    window.addEventListener("resize", align, { passive: true });
     return () => {
       cancelAnimationFrame(raf1);
       cancelAnimationFrame(raf2);

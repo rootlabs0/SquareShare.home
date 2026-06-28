@@ -58,7 +58,7 @@ export default function PixelPath({ className = "" }: { className?: string }) {
     draw();
     const ro = new ResizeObserver(draw);
     ro.observe(canvas);
-    window.addEventListener("resize", draw);
+    window.addEventListener("resize", draw, { passive: true });
     return () => {
       ro.disconnect();
       window.removeEventListener("resize", draw);

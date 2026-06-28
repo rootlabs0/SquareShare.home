@@ -17,8 +17,8 @@ export default function Home() {
         {/* Purpose: one-sentence mission with gradient wave text */}
         <PurposeSection />
 
-        {/* Section 2: White Product Demo — the header reveals from a dark pixel
-            curtain (see PixelReveal), bridging the dark section above. */}
+        {/* Section 2: White Product Demo — an irregular pixel border (PixelEdge)
+            breaks up the dark→light seam from the section above. */}
         <HowItWorks />
 
         {/* The Future — roadmap + planned embeds */}

@@ -6,8 +6,10 @@ import {
   useScroll,
   useTransform,
   useMotionTemplate,
+  useReducedMotion,
   MotionValue,
 } from "framer-motion";
+import { useIsMobile } from "@/hooks/useMediaQuery";
 
 const PURPOSE_TEXT =
   "We exist to give every creator the power to sell anywhere, on their own terms.";
@@ -55,13 +57,54 @@ function Word({
   );
 }
 
-export default function PurposeSection() {
+const HEADING_CLASS =
+  "font-display text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-[1.15] tracking-tight text-white";
+
+// Desktop: every word reveals (opacity + primary-color gradient fringe) as it
+// scrolls through, driven per-frame by useScroll/useTransform.
+function AnimatedPurpose({ words }: { words: string[] }) {
   const containerRef = useRef<HTMLHeadingElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start 0.85", "end 0.55"],
   });
 
+  return (
+    <h2 ref={containerRef} className={HEADING_CLASS}>
+      {words.map((word, i) => {
+        const start = i / words.length;
+        const end = (i + 1) / words.length;
+        return (
+          <Word key={i} progress={scrollYProgress} range={[start, end]}>
+            {word}
+          </Word>
+        );
+      })}
+    </h2>
+  );
+}
+
+// Mobile / reduced motion: skip the per-word scroll scrubbing and the animated
+// text drop-shadow filters (expensive to repaint while scrolling on phones) for
+// a single cheap fade-in. No scroll listener is created on this path.
+function StaticPurpose() {
+  return (
+    <motion.h2
+      className={HEADING_CLASS}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.7, ease: "easeOut" }}
+    >
+      {PURPOSE_TEXT}
+    </motion.h2>
+  );
+}
+
+export default function PurposeSection() {
+  const reduced = useReducedMotion();
+  const isMobile = useIsMobile();
+  const simplify = reduced || isMobile;
   const words = PURPOSE_TEXT.split(" ");
 
   return (
@@ -79,20 +122,7 @@ export default function PurposeSection() {
         >
           Our Purpose
         </motion.p>
-        <h2
-          ref={containerRef}
-          className="font-display text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-[1.15] tracking-tight text-white"
-        >
-          {words.map((word, i) => {
-            const start = i / words.length;
-            const end = (i + 1) / words.length;
-            return (
-              <Word key={i} progress={scrollYProgress} range={[start, end]}>
-                {word}
-              </Word>
-            );
-          })}
-        </h2>
+        {simplify ? <StaticPurpose /> : <AnimatedPurpose words={words} />}
       </div>
     </section>
   );

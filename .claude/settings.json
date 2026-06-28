@@ -8,7 +8,14 @@
       "mcp__playwright__browser_hover",
       "mcp__playwright__browser_console_messages",
       "mcp__playwright__browser_snapshot",
-      "mcp__playwright__browser_wait_for"
+      "mcp__playwright__browser_wait_for",
+      "PowerShell(Get-CimInstance *)",
+      "PowerShell(npx tsc --noEmit*)",
+      "Bash(npx tsc --noEmit*)",
+      "PowerShell(npm run lint *)",
+      "Bash(npm run lint *)",
+      "PowerShell(Get-Process *)",
+      "PowerShell(Select-String *)"
     ]
   }
 }

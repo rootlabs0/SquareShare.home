@@ -60,7 +60,7 @@
   width: max-content;
   height: 100vh;
   align-items: center;
-  gap: clamp(4rem, 9vw, 9rem);
+  gap: clamp(10rem, 18vw, 22rem);
 }
 
 .future-section.is-horizontal .future-panel {
@@ -75,6 +75,11 @@
 
 .future-section.is-horizontal .future-panel--embeds {
   width: clamp(28rem, 48vw, 42rem);
+}
+
+/* The marketplace panel is wider so the gallery screenshot reads at full size. */
+.future-section.is-horizontal .future-panel--wide {
+  width: clamp(26rem, 40vw, 34rem);
 }
 
 .future-section.is-horizontal .future-edge {
@@ -102,58 +107,4 @@
 
 .future-section.is-horizontal .future-progress {
   display: block;
-}
-
-/* Review stars: a gold pop that ripples left to right, then loops. Per-star
-   delay is set inline. */
-@keyframes future-star-pop {
-  0% {
-    opacity: 0;
-    transform: scale(0.3);
-  }
-  10% {
-    opacity: 1;
-    transform: scale(1.35);
-  }
-  20%,
-  84% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  96%,
-  100% {
-    opacity: 0;
-    transform: scale(0.3);
-  }
-}
-
-.future-star {
-  animation: future-star-pop 4.2s ease-in-out infinite both;
-}
-
-/* Blinking text cursor in the code mock. */
-@keyframes future-caret {
-  0%,
-  49% {
-    opacity: 1;
-  }
-  50%,
-  100% {
-    opacity: 0;
-  }
-}
-
-.future-caret {
-  animation: future-caret 1.1s steps(1) infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .future-star {
-    animation: none;
-    opacity: 1;
-    transform: none;
-  }
-  .future-caret {
-    animation: none;
-  }
 }

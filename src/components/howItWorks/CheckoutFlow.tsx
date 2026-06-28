@@ -218,6 +218,8 @@ export default function CheckoutFlow() {
                       <img
                         src={s.img}
                         alt=""
+                        loading="lazy"
+                        decoding="async"
                         className="h-full w-full object-cover"
                       />
                       {isTarget && clicking && (
@@ -273,6 +275,8 @@ export default function CheckoutFlow() {
                     <img
                       src={CHECKOUT_PRODUCT.img}
                       alt=""
+                      loading="lazy"
+                      decoding="async"
                       className="h-10 w-10 rounded-lg object-cover"
                     />
                     <div className="min-w-0 flex-1">

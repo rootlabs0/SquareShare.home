@@ -177,9 +177,9 @@ export default function PixelGrid({
     ro.observe(host);
 
     if (!reduceMotion) {
-      host.addEventListener("pointermove", onPointerMove);
-      host.addEventListener("pointerleave", onPointerOut);
-      host.addEventListener("pointercancel", onPointerOut);
+      host.addEventListener("pointermove", onPointerMove, { passive: true });
+      host.addEventListener("pointerleave", onPointerOut, { passive: true });
+      host.addEventListener("pointercancel", onPointerOut, { passive: true });
     }
 
     return () => {
