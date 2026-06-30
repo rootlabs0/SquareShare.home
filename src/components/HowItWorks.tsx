@@ -19,15 +19,10 @@ export default function HowItWorks() {
       {/* Irregular black "pixel" border bridging the dark section above: the
           black breaks into a jagged run of squares as it meets the light bg. */}
       <PixelEdge />
-      <div className="mx-auto max-w-6xl px-6 pb-16 pt-10 md:pb-24 md:pt-14">
-        <div className="max-w-2xl">
-          <span className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-3 py-1 font-mono text-xs uppercase tracking-widest text-neutral-500">
-            How It Works
-          </span>
-          <h2 className="mt-5 font-display text-4xl font-black leading-tight text-neutral-900 md:text-6xl">
-            From shelf to sale
-            <br />
-            <span className="text-neutral-400">in three steps.</span>
+      <div className="mx-auto max-w-6xl px-6 pb-16 pt-20 md:pb-24 md:pt-32">
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 className="font-display text-5xl font-black leading-[1.05] text-neutral-900 md:text-8xl">
+            It only takes <span className="text-neutral-400">3&nbsp;steps</span>
           </h2>
         </div>
       </div>

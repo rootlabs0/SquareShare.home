@@ -247,7 +247,7 @@ export const cookiesContent: LegalContent = {
         },
         {
           "type": "p",
-          "text": "If you have any questions about this Cookie Policy or our use of cookies and similar technologies, please contact us at [rootlabs0@gmail.com](mailto:rootlabs0@gmail.com)."
+          "text": "If you have any questions about this Cookie Policy or our use of cookies and similar technologies, please contact us at [squareshare.to@gmail.com](mailto:squareshare.to@gmail.com)."
         },
         {
           "type": "p",

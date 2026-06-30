@@ -7,7 +7,7 @@ import { Lock } from "lucide-react";
 // window dots, a URL pill). Purely a picture: pointer-events-none, aria-hidden
 // ornaments under one labelled wrapper.
 export default function BrowserFrame({
-  url = "yourstudio.com",
+  url = "fieldandform.com",
   label,
   children,
 }: {

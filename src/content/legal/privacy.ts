@@ -38,11 +38,11 @@ export const privacyContent: LegalContent = {
         },
         {
           "type": "p",
-          "text": "**Privacy contact point:** For any question about this policy, about how we handle your personal data, or to exercise your rights, contact us at [rootlabs0@gmail.com](mailto:rootlabs0@gmail.com)."
+          "text": "**Privacy contact point:** For any question about this policy, about how we handle your personal data, or to exercise your rights, contact us at [squareshare.to@gmail.com](mailto:squareshare.to@gmail.com)."
         },
         {
           "type": "note",
-          "text": "We have **not appointed a Data Protection Officer (DPO)**, as we are not legally required to do so. The email address above ([rootlabs0@gmail.com](mailto:rootlabs0@gmail.com)) is our designated **privacy contact point** for all data protection matters and data-subject requests."
+          "text": "We have **not appointed a Data Protection Officer (DPO)**, as we are not legally required to do so. The email address above ([squareshare.to@gmail.com](mailto:squareshare.to@gmail.com)) is our designated **privacy contact point** for all data protection matters and data-subject requests."
         }
       ]
     },
@@ -123,7 +123,7 @@ export const privacyContent: LegalContent = {
         },
         {
           "type": "p",
-          "text": "If you contact us (for example by emailing [rootlabs0@gmail.com](mailto:rootlabs0@gmail.com)), we process the information you provide, such as your email address, name, and the content of your message, to respond to and manage your request and keep a record of our correspondence."
+          "text": "If you contact us (for example by emailing [squareshare.to@gmail.com](mailto:squareshare.to@gmail.com)), we process the information you provide, such as your email address, name, and the content of your message, to respond to and manage your request and keep a record of our correspondence."
         },
         {
           "type": "h3",
@@ -290,7 +290,7 @@ export const privacyContent: LegalContent = {
         },
         {
           "type": "p",
-          "text": "Where personal data is transferred to a country the European Commission has formally recognised as providing adequate protection, we may rely on that **adequacy decision**. We are committed to ensuring an appropriate Chapter V safeguard is in place for each transfer; as the controller entity is finalised on incorporation, we will confirm and document each provider's current transfer mechanism (for example DPF certification or executed SCCs) before launch. You can request more information about these safeguards by contacting [rootlabs0@gmail.com](mailto:rootlabs0@gmail.com)."
+          "text": "Where personal data is transferred to a country the European Commission has formally recognised as providing adequate protection, we may rely on that **adequacy decision**. We are committed to ensuring an appropriate Chapter V safeguard is in place for each transfer; as the controller entity is finalised on incorporation, we will confirm and document each provider's current transfer mechanism (for example DPF certification or executed SCCs) before launch. You can request more information about these safeguards by contacting [squareshare.to@gmail.com](mailto:squareshare.to@gmail.com)."
         }
       ]
     },
@@ -359,7 +359,7 @@ export const privacyContent: LegalContent = {
         },
         {
           "type": "p",
-          "text": "**How to exercise your rights:** email us at [rootlabs0@gmail.com](mailto:rootlabs0@gmail.com). We will respond **within one month** of receiving your request, though we may extend this by up to two further months for complex or numerous requests, in which case we will let you know. Exercising your rights is free unless your request is manifestly unfounded or excessive."
+          "text": "**How to exercise your rights:** email us at [squareshare.to@gmail.com](mailto:squareshare.to@gmail.com). We will respond **within one month** of receiving your request, though we may extend this by up to two further months for complex or numerous requests, in which case we will let you know. Exercising your rights is free unless your request is manifestly unfounded or excessive."
         },
         {
           "type": "p",
@@ -391,7 +391,7 @@ export const privacyContent: LegalContent = {
         },
         {
           "type": "p",
-          "text": "When payments are live, **Stripe** may run automated **fraud and risk checks** on transactions as part of processing payments. These checks **may result in a transaction being declined**. Square Share does not make these decisions. Where such checks involve solely automated decision-making producing legal or similarly significant effects, your rights in relation to that processing are as set out in **Stripe's** privacy policy ([https://stripe.com/privacy](https://stripe.com/privacy)); you may also contact us at [rootlabs0@gmail.com](mailto:rootlabs0@gmail.com) and we will assist where we can in raising the matter with Stripe."
+          "text": "When payments are live, **Stripe** may run automated **fraud and risk checks** on transactions as part of processing payments. These checks **may result in a transaction being declined**. Square Share does not make these decisions. Where such checks involve solely automated decision-making producing legal or similarly significant effects, your rights in relation to that processing are as set out in **Stripe's** privacy policy ([https://stripe.com/privacy](https://stripe.com/privacy)); you may also contact us at [squareshare.to@gmail.com](mailto:squareshare.to@gmail.com) and we will assist where we can in raising the matter with Stripe."
         }
       ]
     },
@@ -409,7 +409,7 @@ export const privacyContent: LegalContent = {
         },
         {
           "type": "p",
-          "text": "If you believe a child has provided us with personal data, contact [rootlabs0@gmail.com](mailto:rootlabs0@gmail.com) and we will take appropriate steps to delete it."
+          "text": "If you believe a child has provided us with personal data, contact [squareshare.to@gmail.com](mailto:squareshare.to@gmail.com) and we will take appropriate steps to delete it."
         }
       ]
     },
@@ -525,7 +525,7 @@ export const privacyContent: LegalContent = {
         },
         {
           "type": "p",
-          "text": "To exercise any of these rights, email [rootlabs0@gmail.com](mailto:rootlabs0@gmail.com); this channel applies to all California requests. We **verify** requests by matching the information you provide (such as your email address) against our records, and may request additional information for higher-risk requests. You may designate an **authorised agent** by providing the agent with **signed, written permission** to act on your behalf; we may require you to verify your own identity directly with us and/or to confirm that you authorised the agent."
+          "text": "To exercise any of these rights, email [squareshare.to@gmail.com](mailto:squareshare.to@gmail.com); this channel applies to all California requests. We **verify** requests by matching the information you provide (such as your email address) against our records, and may request additional information for higher-risk requests. You may designate an **authorised agent** by providing the agent with **signed, written permission** to act on your behalf; we may require you to verify your own identity directly with us and/or to confirm that you authorised the agent."
         }
       ]
     },
@@ -553,7 +553,7 @@ export const privacyContent: LegalContent = {
         },
         {
           "type": "p",
-          "text": "For any privacy question or to exercise your rights, contact our privacy contact point at [rootlabs0@gmail.com](mailto:rootlabs0@gmail.com)."
+          "text": "For any privacy question or to exercise your rights, contact our privacy contact point at [squareshare.to@gmail.com](mailto:squareshare.to@gmail.com)."
         },
         {
           "type": "note",

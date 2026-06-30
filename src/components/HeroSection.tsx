@@ -3,8 +3,11 @@
 import WaitlistForm from "./WaitlistForm";
 import CursorWord from "./CursorWord";
 
+// Looser line-height on mobile so the over-sized "Store" (and its tall storefront
+// icon, which rises above the cap height) clears the line above it; tight on
+// desktop where "Into a Store" sits on one line.
 const headingClasses =
-  "text-6xl md:text-8xl lg:text-9xl font-black leading-[0.92] tracking-tight font-display";
+  "text-6xl md:text-8xl lg:text-9xl font-black leading-[1.16] md:leading-[0.92] tracking-tight font-display";
 
 export default function HeroSection() {
   return (
@@ -24,8 +27,9 @@ export default function HeroSection() {
               md/lg where it's the cursor swarm. */}
           <CursorWord
             word="Store"
-            count={120}
-            assembleDelayMs={2000}
+            // How long "Store" stays as readable text before it morphs into the
+            // storefront icon (the icon is an occasional flourish, so hold a while).
+            assembleDelayMs={7000}
             cursorColor="var(--color-acid)"
             className="text-8xl lg:text-9xl"
           />

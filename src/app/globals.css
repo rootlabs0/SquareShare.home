@@ -153,7 +153,33 @@ textarea {
   }
 }
 
+/* ========================================
+   READ-MORE ARROW NUDGE
+   A subtle downward bounce on hover.
+   ======================================== */
+
+@keyframes arrow-nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(2px);
+  }
+}
+
+.animate-arrow-nudge {
+  animation: arrow-nudge 0.9s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-arrow-nudge {
+    animation: none;
+  }
+}
+
 @theme inline {
+  --font-hand: var(--font-hand);
   --font-heading: var(--font-sans);
   --font-sans: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);

@@ -1,110 +1,223 @@
-/* Layout switch for the Future section.
-   Default (no JS, mobile, or reduced motion): a readable vertical stack with a
-   pixel spine. .is-horizontal (desktop with motion allowed): a pinned track
-   that GSAP drives sideways, with a weaving pixel path behind the panels. */
+/* "Where Square Share is going." — a vertical roadmap threaded by a weaving pixel
+   trail. The trail (a <canvas>) runs down a left band; numbered nodes ride the
+   weave beside each station; the content cards stack to the right. Every card
+   effect (glow, edge-fade, dot-grid, 3D tilt) stays INSIDE its card. Purple is
+   reserved for a single accent glow; everything else is neutral. */
 
-.future-track {
-  display: flex;
-  flex-direction: column;
-  gap: 4rem;
-}
-
-.future-panel {
+/* ---- Trail + stations layout ---- */
+.future-trail-wrap {
   position: relative;
-  z-index: 1;
-  width: 100%;
+  --trail-band: 3rem;
 }
 
-/* Vertical pixel spine for the stacked (mobile / reduced-motion) layout. */
-.future-vline {
-  position: absolute;
-  left: 1.5rem;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background-image: repeating-linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.22) 0,
-    rgba(255, 255, 255, 0.22) 3px,
-    transparent 3px,
-    transparent 9px
-  );
-}
-
-/* Weaving pixel path canvas: hidden until horizontal mode. */
-.future-weave {
-  display: none;
-}
-
-/* Leading / trailing breathing room, only in the horizontal track. */
-.future-edge {
-  display: none;
-}
-
-.future-progress {
-  display: none;
-}
-
-/* ---- Horizontal mode (desktop, motion allowed) ---- */
-.future-section.is-horizontal {
-  --future-band: clamp(30rem, 74vh, 40rem);
-}
-
-.future-section.is-horizontal .future-pin {
-  height: 100vh;
-  overflow: hidden;
-}
-
-.future-section.is-horizontal .future-track {
-  flex-direction: row;
-  width: max-content;
-  height: 100vh;
-  align-items: center;
-  gap: clamp(10rem, 18vw, 22rem);
-}
-
-.future-section.is-horizontal .future-panel {
-  flex: none;
-  width: clamp(20rem, 25vw, 23rem);
-  height: var(--future-band);
-}
-
-.future-section.is-horizontal .future-panel--intro {
-  width: clamp(26rem, 48vw, 42rem);
-}
-
-.future-section.is-horizontal .future-panel--embeds {
-  width: clamp(28rem, 48vw, 42rem);
-}
-
-/* The marketplace panel is wider so the gallery screenshot reads at full size. */
-.future-section.is-horizontal .future-panel--wide {
-  width: clamp(26rem, 40vw, 34rem);
-}
-
-.future-section.is-horizontal .future-edge {
-  display: block;
-  flex: none;
-  width: clamp(4rem, 16vw, 15rem);
-}
-
-.future-section.is-horizontal .future-vline {
-  display: none;
-}
-
-.future-section.is-horizontal .future-weave {
-  display: block;
+/* The weaving pixel trail canvas. It spans the full width: on desktop it zigzags
+   through the centre between alternating cards; on mobile it runs down the left. */
+.future-trail {
   position: absolute;
   left: 0;
-  /* width must be explicit: a <canvas> is a replaced element, so left/right
-     alone would fall back to its intrinsic (buffer) width and feed back. */
+  top: 0;
   width: 100%;
-  top: 50%;
-  height: var(--future-band);
-  transform: translateY(-50%);
+  height: 100%;
   z-index: 0;
+  pointer-events: none;
 }
 
-.future-section.is-horizontal .future-progress {
-  display: block;
+/* Mobile: stations stack full-width with the trail running underneath them.
+   Desktop: smaller cards alternate sides, the trail weaving behind them so each
+   card reads as sitting ON the road. Stations sit above the trail (z-index). */
+.future-stations {
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+  padding-left: 0;
 }
+.future-station {
+  position: relative;
+  z-index: 1;
+}
+@media (min-width: 768px) {
+  .future-stations {
+    gap: 7rem;
+  }
+  .future-station {
+    width: 44%;
+  }
+  .future-station:nth-child(odd) {
+    align-self: flex-start;
+  }
+  .future-station:nth-child(even) {
+    align-self: flex-end;
+  }
+}
+
+/* ---- The card shell ---- */
+.future-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  /* Opaque dark base (over black, the old translucent sheen rendered ~#0a0a0c) so
+     the trail is hidden under the card and emerges in the gaps: card-on-road. */
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02)),
+    #0a0a0c;
+  transition: border-color 0.3s ease;
+}
+.future-card:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+/* ---- Neutral glow behind a mockup (default), plus the one purple accent ---- */
+.future-glow {
+  position: absolute;
+  inset: -10%;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    55% 55% at var(--glow-x, 50%) var(--glow-y, 55%),
+    rgba(255, 255, 255, 0.07),
+    transparent 70%
+  );
+  filter: blur(36px);
+}
+.future-glow--accent {
+  background: radial-gradient(
+    72% 72% at var(--glow-x, 50%) var(--glow-y, 55%),
+    rgba(168, 85, 247, 0.65),
+    rgba(168, 85, 247, 0.22) 48%,
+    transparent 74%
+  );
+  filter: blur(52px);
+}
+
+/* ---- Faded dot / line grid texture inside a card ---- */
+.future-dotgrid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.future-dotgrid--dots {
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.09) 1px,
+    transparent 1.5px
+  );
+  background-size: 22px 22px;
+}
+.future-card--embeds .future-dotgrid--dots {
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.18) 1px,
+    transparent 1.5px
+  );
+}
+.future-dotgrid--lines {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 2rem 2rem;
+}
+.future-dotgrid--radial {
+  -webkit-mask-image: radial-gradient(70% 65% at 50% 45%, #000, transparent 78%);
+  mask-image: radial-gradient(70% 65% at 50% 45%, #000, transparent 78%);
+}
+.future-dotgrid--bottom {
+  -webkit-mask-image: linear-gradient(to top, #000, transparent 82%);
+  mask-image: linear-gradient(to top, #000, transparent 82%);
+}
+
+/* ---- Edge-fade a mockup into the card surface ---- */
+.future-angled--b {
+  -webkit-mask-image: linear-gradient(to bottom, #000 58%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 58%, transparent 100%);
+}
+.future-angled--br {
+  -webkit-mask-image: linear-gradient(to bottom right, #000 48%, transparent 94%);
+  mask-image: linear-gradient(to bottom right, #000 48%, transparent 94%);
+}
+
+/* ---- 3D tilt for the gallery (desktop only; upright on small screens) ---- */
+.future-tilt-wrap {
+  perspective: 1500px;
+}
+.future-tilt {
+  transform: none;
+}
+@media (min-width: 768px) {
+  .future-tilt {
+    transform: perspective(1500px) rotateX(4deg) rotateY(-10deg) rotate(-2deg)
+      scale(0.92);
+    transform-origin: center bottom;
+    will-change: transform;
+  }
+}
+
+/* ---- Floating bubble idle bob (gated by reduced motion) ---- */
+@keyframes future-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+.future-bubble {}
+
+/* ---- Terminal status caret blink ---- */
+@keyframes future-caret {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+.future-caret {
+  animation: future-caret 1.05s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .future-bubble,
+  .future-caret {
+    animation: none;
+  }
+}
+
+/* ---- Marketplace: gallery pushed into the lower-right corner, then shadowed ---- */
+.future-card--feed {
+  min-height: 22rem;
+}
+@media (min-width: 768px) {
+  .future-card--feed {
+    min-height: 24rem;
+  }
+}
+.future-feed-stage {
+  position: absolute;
+  z-index: 1;
+  right: -2rem;  /* horizontal position: more negative = further right */
+  bottom: -2rem; /* vertical position: more negative = further down */
+  width: 100%;   /* image size (% of card width) */
+  max-width: 28rem; /* hard cap on image size */
+}
+@media (min-width: 768px) {
+  .future-feed-stage {
+    right: -3rem;  /* horizontal position */
+    bottom: -3rem; /* vertical position */
+    width: 96%;    /* image size */
+    max-width: 30rem; /* hard cap */
+  }
+}
+/* A shadow/fade on the card's right and bottom edges, over the clipped image. */
+.future-card-fade {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(to left, rgba(6, 6, 8, 1) 0%, rgba(6, 6, 8, 0) 65%),
+    linear-gradient(to top, rgba(6, 6, 8, 1) 0%, rgba(6, 6, 8, 0) 65%),
+    linear-gradient(to top left, rgba(6, 6, 8, 0.75) 0%, rgba(6, 6, 8, 0) 55%);
+}
+

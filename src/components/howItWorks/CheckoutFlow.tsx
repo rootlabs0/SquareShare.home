@@ -17,7 +17,7 @@ const CUSTOMER = "#a855f7";
 
 type Stage = "browse" | "pay" | "confirm";
 
-const EMAIL = "you@studio.com";
+const EMAIL = "you@fieldandform.com";
 const CARD = "4242 4242 4242 4242";
 const EXP = "04 / 28";
 const CVC = "123";
@@ -174,7 +174,9 @@ export default function CheckoutFlow() {
   return (
     <div ref={scope} className="relative mx-auto w-full max-w-sm">
       {/* The store the customer is browsing */}
-      <div
+      <motion.div
+        animate={{ opacity: showStage === "browse" ? 1 : 0 }}
+        transition={{ duration: 0.18 }}
         aria-label="A Square Share store embedded on a website"
         role="img"
         className="select-none overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-[0_20px_60px_-20px_rgba(0,0,0,0.18)]"
@@ -189,17 +191,17 @@ export default function CheckoutFlow() {
             <div className="flex h-7 flex-1 items-center gap-2 rounded-md border border-neutral-200 bg-white px-3">
               <Lock size={11} className="shrink-0 text-neutral-400" />
               <span className="truncate text-xs text-neutral-500">
-                yourstudio.com
+                fieldandform.com
               </span>
             </div>
           </div>
           <div className="px-5 py-4">
-            <div className="mb-2 flex items-center justify-between">
-              <span className="text-sm font-black tracking-tight text-neutral-900">
-                STUDIO
+            <div className="mb-2 flex items-center gap-1.5">
+              <span className="flex h-4 w-4 items-center justify-center rounded-[5px] bg-neutral-900 font-display text-[9px] font-black leading-none text-white">
+                F
               </span>
-              <span className="text-[10px] text-neutral-400">
-                Powered by Square Share
+              <span className="font-display text-sm font-bold tracking-tight text-neutral-900">
+                Field&nbsp;&amp;&nbsp;Form
               </span>
             </div>
             <div className="aspect-[4/3] w-full">
@@ -249,146 +251,160 @@ export default function CheckoutFlow() {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Payment + confirmation modal */}
       <AnimatePresence>
         {showStage !== "browse" && (
-          <motion.div
-            className="absolute inset-0 z-20 flex items-center justify-center rounded-2xl bg-black/30 p-3"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
+          <div className="absolute inset-0 z-20 flex items-center justify-center p-3">
             <motion.div
+              layout
               className="w-full max-w-[300px] overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-2xl"
-              initial={{ opacity: 0, y: 16, scale: 0.97 }}
+              initial={{ opacity: 0, y: 14, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 8, scale: 0.98 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
+              exit={{ opacity: 0, y: 6, scale: 0.98 }}
+              transition={{ duration: 0.28, delay: 0.14, ease: "easeOut" }}
             >
-              {showStage === "pay" ? (
-                <div className="p-4">
-                  {/* Line item */}
-                  <div className="flex items-center gap-2.5 border-b border-neutral-100 pb-3">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={CHECKOUT_PRODUCT.img}
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                      className="h-10 w-10 rounded-lg object-cover"
-                    />
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-xs font-bold text-neutral-900">
-                        {CHECKOUT_PRODUCT.name}
-                      </p>
-                      <p className="text-[11px] text-neutral-500">
-                        {CHECKOUT_PRODUCT.category}
-                      </p>
-                    </div>
-                    <p className="font-mono text-xs font-bold text-neutral-900">
-                      {CHECKOUT_PRODUCT.price}
-                    </p>
-                  </div>
-
-                  {/* Fields */}
-                  <div className="mt-3 flex flex-col gap-2.5">
-                    <div>
-                      <span className="mb-1 block text-[10px] font-medium text-neutral-500">
-                        Email
-                      </span>
-                      <div className="flex h-8 items-center rounded-lg border border-neutral-200 px-2.5 text-[11px] text-neutral-800">
-                        {dEmail || (
-                          <span className="text-neutral-400">
-                            you@example.com
-                          </span>
-                        )}
-                        <Caret active={typing === "email"} />
-                      </div>
-                    </div>
-                    <div>
-                      <span className="mb-1 block text-[10px] font-medium text-neutral-500">
-                        Card information
-                      </span>
-                      <div className="flex h-8 items-center gap-2 rounded-lg border border-neutral-200 px-2.5 text-[11px] text-neutral-800">
-                        <CreditCard
-                          size={13}
-                          className="shrink-0 text-neutral-400"
+              <AnimatePresence mode="wait" initial={false}>
+                {showStage === "pay" ? (
+                  <motion.div
+                    key="pay"
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.18, ease: "easeInOut" }}
+                  >
+                    <div className="p-4">
+                      {/* Line item */}
+                      <div className="flex items-center gap-2.5 border-b border-neutral-100 pb-3">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={CHECKOUT_PRODUCT.img}
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
+                          className="h-10 w-10 rounded-lg object-cover"
                         />
-                        <span className="tracking-wide">{dCard}</span>
-                        <Caret active={typing === "card"} />
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-xs font-bold text-neutral-900">
+                            {CHECKOUT_PRODUCT.name}
+                          </p>
+                          <p className="text-[11px] text-neutral-500">
+                            {CHECKOUT_PRODUCT.category}
+                          </p>
+                        </div>
+                        <p className="font-mono text-xs font-bold text-neutral-900">
+                          {CHECKOUT_PRODUCT.price}
+                        </p>
                       </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2.5">
-                      <div className="flex h-8 items-center rounded-lg border border-neutral-200 px-2.5 text-[11px] text-neutral-800">
-                        {dExp || <span className="text-neutral-400">MM / YY</span>}
-                        <Caret active={typing === "exp"} />
+
+                      {/* Fields */}
+                      <div className="mt-3 flex flex-col gap-2.5">
+                        <div>
+                          <span className="mb-1 block text-[10px] font-medium text-neutral-500">
+                            Email
+                          </span>
+                          <div className="flex h-8 items-center rounded-lg border border-neutral-200 px-2.5 text-[11px] text-neutral-800">
+                            {dEmail || (
+                              <span className="text-neutral-400">
+                                you@example.com
+                              </span>
+                            )}
+                            <Caret active={typing === "email"} />
+                          </div>
+                        </div>
+                        <div>
+                          <span className="mb-1 block text-[10px] font-medium text-neutral-500">
+                            Card information
+                          </span>
+                          <div className="flex h-8 items-center gap-2 rounded-lg border border-neutral-200 px-2.5 text-[11px] text-neutral-800">
+                            <CreditCard
+                              size={13}
+                              className="shrink-0 text-neutral-400"
+                            />
+                            <span className="tracking-wide">{dCard}</span>
+                            <Caret active={typing === "card"} />
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2.5">
+                          <div className="flex h-8 items-center rounded-lg border border-neutral-200 px-2.5 text-[11px] text-neutral-800">
+                            {dExp || <span className="text-neutral-400">MM / YY</span>}
+                            <Caret active={typing === "exp"} />
+                          </div>
+                          <div className="flex h-8 items-center rounded-lg border border-neutral-200 px-2.5 text-[11px] text-neutral-800">
+                            {dCvc ? (
+                              <span className="tracking-widest">
+                                {"•".repeat(dCvc.length)}
+                              </span>
+                            ) : (
+                              <span className="text-neutral-400">CVC</span>
+                            )}
+                            <Caret active={typing === "cvc"} />
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex h-8 items-center rounded-lg border border-neutral-200 px-2.5 text-[11px] text-neutral-800">
-                        {dCvc ? (
-                          <span className="tracking-widest">
-                            {"•".repeat(dCvc.length)}
+
+                      {/* Pay button */}
+                      <div
+                        ref={payRef}
+                        className="mt-4 flex h-10 items-center justify-center rounded-lg bg-neutral-900 text-xs font-semibold text-white"
+                      >
+                        {processing ? (
+                          <span className="flex items-center gap-2">
+                            <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                            Processing
                           </span>
                         ) : (
-                          <span className="text-neutral-400">CVC</span>
+                          <>Pay {CHECKOUT_PRODUCT.price}</>
                         )}
-                        <Caret active={typing === "cvc"} />
+                      </div>
+                      <p className="mt-2 flex items-center justify-center gap-1 text-[10px] text-neutral-400">
+                        <Lock size={9} />
+                        Powered by Stripe
+                      </p>
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="confirm"
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.22, ease: "easeOut" }}
+                  >
+                    <div className="flex flex-col items-center px-5 py-7 text-center">
+                      <motion.span
+                        className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500 text-white"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 320,
+                          damping: 18,
+                          delay: 0.1,
+                        }}
+                      >
+                        <Check size={26} strokeWidth={3} />
+                      </motion.span>
+                      <p className="mt-3 text-sm font-black text-neutral-900">
+                        Payment successful
+                      </p>
+                      <p className="mt-1 text-[11px] text-neutral-500">
+                        {CHECKOUT_PRODUCT.name} is on its way. A receipt was sent to{" "}
+                        {EMAIL}.
+                      </p>
+                      <div className="mt-4 flex w-full items-center justify-between rounded-lg bg-neutral-50 px-3 py-2 text-[11px]">
+                        <span className="text-neutral-500">Order #SQ-2048</span>
+                        <span className="font-mono font-bold text-neutral-900">
+                          {CHECKOUT_PRODUCT.price}
+                        </span>
                       </div>
                     </div>
-                  </div>
-
-                  {/* Pay button */}
-                  <div
-                    ref={payRef}
-                    className="mt-4 flex h-10 items-center justify-center rounded-lg bg-neutral-900 text-xs font-semibold text-white"
-                  >
-                    {processing ? (
-                      <span className="flex items-center gap-2">
-                        <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                        Processing
-                      </span>
-                    ) : (
-                      <>Pay {CHECKOUT_PRODUCT.price}</>
-                    )}
-                  </div>
-                  <p className="mt-2 flex items-center justify-center gap-1 text-[10px] text-neutral-400">
-                    <Lock size={9} />
-                    Powered by Stripe
-                  </p>
-                </div>
-              ) : (
-                // Confirmation
-                <div className="flex flex-col items-center px-5 py-7 text-center">
-                  <motion.span
-                    className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500 text-white"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 320,
-                      damping: 18,
-                    }}
-                  >
-                    <Check size={26} strokeWidth={3} />
-                  </motion.span>
-                  <p className="mt-3 text-sm font-black text-neutral-900">
-                    Payment successful
-                  </p>
-                  <p className="mt-1 text-[11px] text-neutral-500">
-                    {CHECKOUT_PRODUCT.name} is on its way. A receipt was sent to{" "}
-                    {EMAIL}.
-                  </p>
-                  <div className="mt-4 flex w-full items-center justify-between rounded-lg bg-neutral-50 px-3 py-2 text-[11px]">
-                    <span className="text-neutral-500">Order #SQ-2048</span>
-                    <span className="font-mono font-bold text-neutral-900">
-                      {CHECKOUT_PRODUCT.price}
-                    </span>
-                  </div>
-                </div>
-              )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
-          </motion.div>
+          </div>
         )}
       </AnimatePresence>
 

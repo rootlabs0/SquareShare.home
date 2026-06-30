@@ -38,7 +38,7 @@ export const termsContent: LegalContent = {
         },
         {
           "type": "note",
-          "text": "**Company status.** Square Share is currently in the process of incorporation. Once incorporation is complete, the bracketed registered entity name and address above will be finalised and these Terms will be updated accordingly. Until then, the operator is the team building Square Share, contactable at [rootlabs0@gmail.com](mailto:rootlabs0@gmail.com)."
+          "text": "**Company status.** Square Share is currently in the process of incorporation. Once incorporation is complete, the bracketed registered entity name and address above will be finalised and these Terms will be updated accordingly. Until then, the operator is the team building Square Share, contactable at [squareshare.to@gmail.com](mailto:squareshare.to@gmail.com)."
         },
         {
           "type": "p",
@@ -143,7 +143,7 @@ export const termsContent: LegalContent = {
         },
         {
           "type": "p",
-          "text": "The Service is **not directed to children**. We do not knowingly collect personal data from anyone under 16 (consistent with Article 8 GDPR). If you believe a child has provided us with personal data, contact us at [rootlabs0@gmail.com](mailto:rootlabs0@gmail.com) and we will take appropriate steps."
+          "text": "The Service is **not directed to children**. We do not knowingly collect personal data from anyone under 16 (consistent with Article 8 GDPR). If you believe a child has provided us with personal data, contact us at [squareshare.to@gmail.com](mailto:squareshare.to@gmail.com) and we will take appropriate steps."
         }
       ]
     },
@@ -182,7 +182,7 @@ export const termsContent: LegalContent = {
           "items": [
             "**Accurate information.** You must provide accurate, current, and complete information when registering, and keep it up to date.",
             "**Credential security.** You are responsible for keeping your login credentials confidential and for all activity that occurs under your account.",
-            "**Responsibility for activity.** You must notify us promptly at [rootlabs0@gmail.com](mailto:rootlabs0@gmail.com) if you suspect any unauthorised use of, or security breach affecting, your account.",
+            "**Responsibility for activity.** You must notify us promptly at [squareshare.to@gmail.com](mailto:squareshare.to@gmail.com) if you suspect any unauthorised use of, or security breach affecting, your account.",
             "**One identity.** You must not impersonate any person or organisation, or misrepresent your affiliation with anyone."
           ]
         },
@@ -581,7 +581,7 @@ export const termsContent: LegalContent = {
         },
         {
           "type": "p",
-          "text": "Before commencing proceedings, the parties will first attempt to resolve any dispute informally by contacting [rootlabs0@gmail.com](mailto:rootlabs0@gmail.com) and allowing a period of **30 days** to reach a resolution. This does not prejudice either party's right to seek urgent injunctive relief, or any Consumer's mandatory rights."
+          "text": "Before commencing proceedings, the parties will first attempt to resolve any dispute informally by contacting [squareshare.to@gmail.com](mailto:squareshare.to@gmail.com) and allowing a period of **30 days** to reach a resolution. This does not prejudice either party's right to seek urgent injunctive relief, or any Consumer's mandatory rights."
         },
         {
           "type": "note",
@@ -593,7 +593,7 @@ export const termsContent: LegalContent = {
         },
         {
           "type": "p",
-          "text": "The EU Online Dispute Resolution (ODR) platform was **discontinued by the European Commission with effect from 20 July 2025** and is no longer available. Consumers may instead seek out-of-court resolution through the competent alternative dispute resolution (ADR) / consumer arbitration body in their country of residence, in the Czech Republic, the general ADR body for consumer disputes is the **Czech Trade Inspection Authority** (*Česká obchodní inspekce*, **ČOI**), [https://www.coi.cz](https://www.coi.cz), and through any national consumer complaint channels. We are **not obliged** to participate in dispute-resolution proceedings before a consumer arbitration board. You can always contact us first at [rootlabs0@gmail.com](mailto:rootlabs0@gmail.com)."
+          "text": "The EU Online Dispute Resolution (ODR) platform was **discontinued by the European Commission with effect from 20 July 2025** and is no longer available. Consumers may instead seek out-of-court resolution through the competent alternative dispute resolution (ADR) / consumer arbitration body in their country of residence, in the Czech Republic, the general ADR body for consumer disputes is the **Czech Trade Inspection Authority** (*Česká obchodní inspekce*, **ČOI**), [https://www.coi.cz](https://www.coi.cz), and through any national consumer complaint channels. We are **not obliged** to participate in dispute-resolution proceedings before a consumer arbitration board. You can always contact us first at [squareshare.to@gmail.com](mailto:squareshare.to@gmail.com)."
         }
       ]
     },
@@ -611,7 +611,7 @@ export const termsContent: LegalContent = {
             "**No third-party rights.** These Terms do not give any person who is not a party any right to enforce them, except as expressly stated.",
             "**Assignment.** You may not assign or transfer these Terms without our prior written consent. We may assign these Terms to an affiliate or in connection with a merger, acquisition, reorganisation, or sale of assets, including on completion of our incorporation, without affecting your rights.",
             "**Force majeure.** We are not liable for any failure or delay caused by events beyond our reasonable control, including outages of third-party services such as Stripe, Supabase, or Cloudflare, internet failures, or acts of government. The affected party will use reasonable efforts to mitigate the effect, and either party may terminate the affected arrangement if the event continues for more than **30 days**.",
-            "**Notices.** We may give notice by email or via the Service. You give notice to us in writing at [rootlabs0@gmail.com](mailto:rootlabs0@gmail.com). Notices sent by email are deemed received 24 hours after sending, unless a bounce or delivery-failure notification is received."
+            "**Notices.** We may give notice by email or via the Service. You give notice to us in writing at [squareshare.to@gmail.com](mailto:squareshare.to@gmail.com). Notices sent by email are deemed received 24 hours after sending, unless a bounce or delivery-failure notification is received."
           ]
         }
       ]
@@ -622,7 +622,7 @@ export const termsContent: LegalContent = {
       "blocks": [
         {
           "type": "p",
-          "text": "Questions about these Terms, the Service, or your account can be sent to us at [rootlabs0@gmail.com](mailto:rootlabs0@gmail.com)."
+          "text": "Questions about these Terms, the Service, or your account can be sent to us at [squareshare.to@gmail.com](mailto:squareshare.to@gmail.com)."
         },
         {
           "type": "p",

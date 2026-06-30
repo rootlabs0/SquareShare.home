@@ -150,11 +150,11 @@ export default function Footer() {
                   Contact
                 </span>
                 <a
-                  href="mailto:rootlabs0@gmail.com"
+                  href="mailto:squareshare.to@gmail.com"
                   className="group inline-flex items-center gap-2 font-mono text-xs tracking-widest text-white/50 transition-colors duration-200 hover:text-acid"
                 >
                   <Mail size={14} strokeWidth={2} className="shrink-0" />
-                  rootlabs0@gmail.com
+                  squareshare.to@gmail.com
                 </a>
                 <div ref={socialRef} className="mt-6 flex items-center gap-1">
                   {socialLinks.map(({ label, href, path }) => (

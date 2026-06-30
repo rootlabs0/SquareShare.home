@@ -7,9 +7,14 @@ import {
   type ReactNode,
   type RefObject,
 } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useInView,
+  useReducedMotion,
+} from "framer-motion";
+import { ShoppingBag } from "lucide-react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import BrowserFrame from "./BrowserFrame";
 import CursorPointer from "./CursorPointer";
 import StorefrontGrid from "./StorefrontGrid";
 import StoreBuilder from "./StoreBuilder";
@@ -42,7 +47,12 @@ function TextBlock({ step }: { step: (typeof STEPS)[number] }) {
   );
 }
 
-// The example external website. `slotRef` marks where the store lands.
+// The example external website the built store gets embedded into. Kept simple
+// on purpose — a logo nav, one short hero line, the embedded shelf — so the
+// store from step 01 is the focal point and reads as living inside someone's
+// real page. No browser chrome; it presents as the site itself. `slotRef` marks
+// where the dragged store lands and MUST stay aspect-[4/3] + w-full so the
+// handoff math that measures it lines up.
 function SiteFrame({
   slotRef,
   children,
@@ -51,40 +61,161 @@ function SiteFrame({
   children?: ReactNode;
 }) {
   return (
-    <BrowserFrame
-      url="yourstudio.com"
-      label="An external website with the Square Share store embedded inside it"
+    <div
+      role="img"
+      aria-label="An external website with the Square Share store embedded inside it"
+      className="pointer-events-none select-none overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-[0_20px_60px_-20px_rgba(0,0,0,0.18)]"
     >
-      <div className="flex items-center justify-between border-b border-neutral-100 px-4 py-2.5">
-        <span className="text-sm font-black tracking-tight text-neutral-900">
-          STUDIO
-        </span>
-        <div className="hidden gap-4 text-[11px] text-neutral-400 sm:flex">
-          <span>Work</span>
-          <span>About</span>
-          <span>Contact</span>
+      <div aria-hidden="true">
+        {/* Nav */}
+        <div className="flex items-center justify-between border-b border-neutral-100 px-5 py-3">
+          <div className="flex items-center gap-2">
+            <span className="flex h-5 w-5 items-center justify-center rounded-[6px] bg-neutral-900 font-display text-[11px] font-black leading-none text-white">
+              F
+            </span>
+            <span className="font-display text-sm font-bold tracking-tight text-neutral-900">
+              Field&nbsp;&amp;&nbsp;Form
+            </span>
+          </div>
+          <div className="flex items-center gap-5 text-[11px] font-medium text-neutral-400">
+            <span>About</span>
+            <span>Contact</span>
+            <ShoppingBag
+              size={14}
+              strokeWidth={2.2}
+              className="text-neutral-600"
+            />
+          </div>
+        </div>
+
+        {/* Hero + the embedded shelf */}
+        <div className="px-5 pb-6 pt-5">
+          <h4 className="font-display text-lg font-black leading-tight tracking-tight text-neutral-900">
+            Handmade goods, made to last.
+          </h4>
+          <p className="mt-1.5 max-w-[44ch] text-[11px] leading-relaxed text-neutral-500">
+            A small shop of things I make by hand between commissions.
+          </p>
+
+          {/* The embedded store — the hero of this section. */}
+          <div className="mx-auto mt-5 w-[82%]">
+            <div ref={slotRef} className="aspect-[4/3] w-full">
+              {children}
+            </div>
+          </div>
+        </div>
+
+        {/* A peek of the next section, deliberately clipped by the card's bottom
+            edge so the page reads as continuing below the fold. The capped
+            height cuts off partway through the first line of body copy. */}
+        <div className="max-h-[74px] overflow-hidden border-t border-neutral-100 px-5 pt-4">
+          <h4 className="font-display text-lg font-black leading-tight tracking-tight text-neutral-900">
+            Why I do what I do
+          </h4>
+          <p className="mt-2 text-[11px] leading-relaxed text-neutral-500">
+            I started Field &amp; Form at a single workbench, making the pieces I
+            wished I could find and couldn&apos;t. Every order still passes
+            through my hands before it ever reaches yours.
+          </p>
         </div>
       </div>
-      <div className="px-4 py-3">
-        <h4 className="text-sm font-black text-neutral-900 sm:text-base">
-          Handmade goods from my studio
-        </h4>
-        <p className="mt-0.5 text-[11px] text-neutral-500">
-          A small shop of things I make between commissions.
-        </p>
-        <div className="mb-1 mt-3 flex items-center justify-between">
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-neutral-400">
-            Shop
-          </span>
-          <span className="text-[9px] text-neutral-400">
-            Powered by Square Share
-          </span>
-        </div>
-        <div ref={slotRef} className="aspect-[4/3] w-[64%]">
-          {children}
-        </div>
+    </div>
+  );
+}
+
+// 02 in the stacked (mobile) layout: a blue cursor carries the store in from the
+// upper right and drops it into the website, then pops away. Self-plays once on
+// scroll-into-view (mobile scroll-scrubbing is janky, so this is time-based).
+// Reduced motion falls back to the store already embedded, with no cursor.
+function SiteFrameDrop() {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.4 });
+  const reduced = useReducedMotion();
+  const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
+  if (reduced) {
+    return (
+      <div ref={ref}>
+        <SiteFrame>
+          <StorefrontGrid className="!shadow-none" />
+        </SiteFrame>
       </div>
-    </BrowserFrame>
+    );
+  }
+
+  return (
+    <div ref={ref}>
+      <SiteFrame>
+        <div className="relative h-full w-full">
+          {/* Carrier: brings the store down from the upper right into the slot. */}
+          <motion.div
+            className="absolute inset-0"
+            initial={{ x: "40%", y: "-58%", opacity: 0 }}
+            animate={inView ? { x: 0, y: 0, opacity: 1 } : undefined}
+            transition={{ duration: 1, ease: EASE, opacity: { duration: 0.3 } }}
+          >
+            {/* Store: scales up from the carried size around the grab point, with
+                a lift shadow that fades out as it embeds into the page. */}
+            <motion.div
+              className="h-full w-full"
+              style={{ transformOrigin: "70% 64%" }}
+              initial={{
+                scale: 0.5,
+                rotate: -4,
+                filter: "drop-shadow(0 14px 22px rgba(0,0,0,0.22))",
+              }}
+              animate={
+                inView
+                  ? {
+                      scale: 1,
+                      rotate: 0,
+                      filter: "drop-shadow(0 0px 0px rgba(0,0,0,0))",
+                    }
+                  : undefined
+              }
+              transition={{
+                scale: { duration: 1, ease: EASE },
+                rotate: { duration: 1, ease: EASE },
+                filter: { duration: 0.4, delay: 0.82, ease: "easeOut" },
+              }}
+            >
+              <StorefrontGrid className="!shadow-none" />
+            </motion.div>
+
+            {/* Blue cursor sitting on the grab point; pops away once it lands. */}
+            <motion.div
+              className="pointer-events-none absolute left-[70%] top-[64%] z-40 origin-top-left"
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={
+                inView
+                  ? {
+                      opacity: [0, 1, 1, 0],
+                      scale: [0.6, 1, 1, 0.7],
+                      x: [0, 0, 0, 26],
+                      y: [0, 0, 0, -20],
+                    }
+                  : undefined
+              }
+              transition={{
+                duration: 1.25,
+                times: [0, 0.16, 0.82, 1],
+                ease: "easeOut",
+              }}
+            >
+              {/* Release ripple as the store drops. */}
+              <motion.span
+                className="absolute h-6 w-6 rounded-full"
+                style={{ left: -8, top: -9, border: `2px solid ${CURSOR_BLUE}` }}
+                initial={{ scale: 0, opacity: 0 }}
+                animate={inView ? { scale: [0, 2.4], opacity: [0.55, 0] } : undefined}
+                transition={{ duration: 0.5, delay: 0.8, ease: "easeOut" }}
+              />
+              <CursorPointer color={CURSOR_BLUE} />
+            </motion.div>
+          </motion.div>
+        </div>
+      </SiteFrame>
+    </div>
   );
 }
 
@@ -104,9 +235,7 @@ function StackedFallback() {
       </div>
       <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
         <div className="order-2 mx-auto w-full max-w-xl lg:order-1 lg:mx-0">
-          <SiteFrame>
-            <StorefrontGrid className="!shadow-none" />
-          </SiteFrame>
+          <SiteFrameDrop />
         </div>
         <div className="order-1 lg:order-2">
           <TextBlock step={S2} />

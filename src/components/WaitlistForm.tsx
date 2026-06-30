@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { PartyPopper, Loader2 } from "lucide-react";
+import { useState, useEffect, type FormEvent } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import PixelButton from "@/components/PixelButton";
@@ -13,8 +13,19 @@ interface WaitlistFormProps {
 }
 
 export default function WaitlistForm({ variant = "hero" }: WaitlistFormProps) {
+  const reduce = useReducedMotion();
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  // On success, play the checkmark draw-in first, then reveal the card.
+  // Reduced-motion users skip straight to the card.
+  const [revealed, setRevealed] = useState(false);
+  const showCard = revealed || reduce;
+
+  useEffect(() => {
+    if (status !== "success" || reduce) return;
+    const t = setTimeout(() => setRevealed(true), 1400);
+    return () => clearTimeout(t);
+  }, [status, reduce]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -26,6 +37,7 @@ export default function WaitlistForm({ variant = "hero" }: WaitlistFormProps) {
     }
 
     setStatus("loading");
+    setRevealed(false);
 
     try {
       const res = await fetch("/api/waitlist", {
@@ -52,28 +64,14 @@ export default function WaitlistForm({ variant = "hero" }: WaitlistFormProps) {
   return (
     <div className={cn("w-full mx-auto", isFooter ? "max-w-2xl" : "max-w-lg")}>
       <AnimatePresence mode="wait">
-        {status === "success" ? (
-          <motion.div
-            key="success"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            className="text-center py-6 px-8 border-2 border-[#a855f7] bg-[#a855f7]/10"
-          >
-            <p className="text-[#a855f7] font-bold text-lg flex items-center justify-center gap-2">
-              You&apos;re on the list! <PartyPopper size={20} />
-            </p>
-            <p className={cn("text-sm mt-1", isFooter ? "text-neutral-500" : "text-white/50")}>
-              We&apos;ll hit you up when it&apos;s go time.
-            </p>
-          </motion.div>
-        ) : (
+        {status !== "success" ? (
           <motion.form
             key="form"
             onSubmit={handleSubmit}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
             className="flex flex-col sm:flex-row gap-3"
             suppressHydrationWarning
           >
@@ -112,6 +110,120 @@ export default function WaitlistForm({ variant = "hero" }: WaitlistFormProps) {
               )}
             </PixelButton>
           </motion.form>
+        ) : !showCard ? (
+          // Phase 1: the checkmark draws itself in, then hands off to the card.
+          <motion.div
+            key="tick"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
+            transition={{ duration: 0.25 }}
+            className="flex items-center justify-center py-16"
+          >
+            <motion.svg
+              viewBox="0 0 52 52"
+              className="h-20 w-20"
+              initial={{ scale: 0.7 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 240, damping: 16 }}
+            >
+              <motion.circle
+                cx="26"
+                cy="26"
+                r="24"
+                fill="none"
+                stroke="#a855f7"
+                strokeWidth="2"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ pathLength: 1, opacity: 1 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+              />
+              <motion.path
+                d="M15 27l7.5 7.5L38 19"
+                fill="none"
+                stroke="#a855f7"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ delay: 0.45, duration: 0.35, ease: "easeOut" }}
+              />
+            </motion.svg>
+          </motion.div>
+        ) : (
+          // Phase 2: the card slides up, with the oversized check as a watermark.
+          <motion.div
+            key="card"
+            initial={reduce ? { opacity: 1 } : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={
+              reduce ? { duration: 0 } : { duration: 0.4, ease: [0.22, 1, 0.36, 1] }
+            }
+            className={cn(
+              "relative mx-auto max-w-md overflow-hidden border px-8 py-9",
+              isFooter
+                ? "border-neutral-200 bg-white shadow-[0_2px_24px_rgba(0,0,0,0.05)]"
+                : "border-white/10 bg-white/[0.04]"
+            )}
+          >
+            {/* Oversized check watermark, bleeding off the right edge. */}
+            <Check
+              aria-hidden
+              strokeWidth={1.5}
+              className={cn(
+                "pointer-events-none absolute top-1/2 -right-10 h-60 w-60 -translate-y-1/2",
+                isFooter ? "text-[#a855f7]/[0.18]" : "text-[#a855f7]/[0.15]"
+              )}
+            />
+
+            <div className="relative z-10 max-w-xs text-left">
+              <h3
+                className={cn(
+                  "font-display text-xl font-black md:text-2xl",
+                  isFooter ? "text-neutral-900" : "text-white"
+                )}
+              >
+                You&apos;re on the list!
+              </h3>
+
+              <p
+                className={cn(
+                  "mt-2 text-sm leading-relaxed",
+                  isFooter ? "text-neutral-500" : "text-white/50"
+                )}
+              >
+                We&apos;ll email you once, when it&apos;s go time. Until then, we
+                share the whole process as it happens.
+              </p>
+
+              <a
+                href="https://instagram.com/squareshare"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Follow Square Share on Instagram"
+                className={cn(
+                  "mt-6 inline-flex items-center justify-center gap-2.5 px-7 py-3.5",
+                  "text-sm font-bold transition-colors duration-200",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+                  isFooter
+                    ? "bg-neutral-900 text-white hover:bg-neutral-700 focus-visible:ring-neutral-900 focus-visible:ring-offset-white"
+                    : "bg-white text-black hover:bg-white/85 focus-visible:ring-white focus-visible:ring-offset-black"
+                )}
+              >
+                {/* simple-icons Instagram glyph (same source as Footer). */}
+                <svg
+                  viewBox="0 0 24 24"
+                  className="h-[18px] w-[18px] fill-current"
+                  aria-hidden
+                >
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                </svg>
+                @squareshare
+              </a>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
