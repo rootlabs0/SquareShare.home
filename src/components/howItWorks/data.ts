@@ -2,22 +2,24 @@
 //
 // Products are real stock photos bundled under /public/howitworks. The shelf
 // leans on clean tech goods with a few pops of greenery/plants.
+import { asset } from "@/lib/asset";
 
-// Single source of truth for the product photos.
+// Single source of truth for the product photos. asset() prefixes the basePath
+// so these resolve when served from a GitHub Pages project subpath.
 export const PRODUCT_IMAGES = [
-  "/howitworks/product-01.jpg", // camera
-  "/howitworks/product-02.jpg", // headphones
-  "/howitworks/product-03.jpg", // watch
-  "/howitworks/product-04.jpg", // monstera (green)
-  "/howitworks/product-05.jpg", // mouse
-  "/howitworks/product-06.jpg", // smartwatch
-  "/howitworks/product-07.jpg", // succulent (green)
-  "/howitworks/product-08.jpg", // keyboard
-  "/howitworks/product-09.jpg", // speaker
-  "/howitworks/product-10.jpg", // potted monstera (green)
-  "/howitworks/product-11.jpg", // phone
-  "/howitworks/product-12.jpg", // seedlings (green)
-] as const;
+  asset("/howitworks/product-01.jpg"), // camera
+  asset("/howitworks/product-02.jpg"), // headphones
+  asset("/howitworks/product-03.jpg"), // watch
+  asset("/howitworks/product-04.jpg"), // monstera (green)
+  asset("/howitworks/product-05.jpg"), // mouse
+  asset("/howitworks/product-06.jpg"), // smartwatch
+  asset("/howitworks/product-07.jpg"), // succulent (green)
+  asset("/howitworks/product-08.jpg"), // keyboard
+  asset("/howitworks/product-09.jpg"), // speaker
+  asset("/howitworks/product-10.jpg"), // potted monstera (green)
+  asset("/howitworks/product-11.jpg"), // phone
+  asset("/howitworks/product-12.jpg"), // seedlings (green)
+];
 
 const p = PRODUCT_IMAGES;
 

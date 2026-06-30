@@ -1,4 +1,5 @@
 import type { RoadmapItem } from "./data";
+import { asset } from "@/lib/asset";
 import GlowMock from "./GlowMock";
 import AngledMock from "./AngledMock";
 
@@ -53,7 +54,7 @@ export default function MarketplacePanel({ step }: { step: RoadmapItem }) {
                 <div className="aspect-[2531/1598]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src="/img/squareshare1.webp"
+                    src={asset("/img/squareshare1.webp")}
                     alt="Square Share photo marketplace gallery"
                     loading="lazy"
                     decoding="async"

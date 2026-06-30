@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import PixelButton from "@/components/PixelButton";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/lib/supabase";
 
 interface WaitlistFormProps {
   variant?: "hero" | "footer";
@@ -40,15 +41,21 @@ export default function WaitlistForm({ variant = "hero" }: WaitlistFormProps) {
     setRevealed(false);
 
     try {
-      const res = await fetch("/api/waitlist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Something went wrong.");
+      // Static site (GitHub Pages): submit straight to Supabase from the client.
+      // The anon key respects the same RLS as the old edge route did. With no
+      // Supabase configured, fall back to a mock success so the UX still works.
+      if (supabase) {
+        const { error } = await supabase
+          .from("waitlist_leads")
+          .insert([{ email }]);
+        if (error) {
+          if (error.code === "23505") {
+            throw new Error("This email is already on the waitlist!");
+          }
+          throw new Error("Something went wrong.");
+        }
+      } else {
+        console.log(`[MOCK] Waitlist signup: ${email}`);
       }
 
       setStatus("success");
