@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 9" shape-rendering="crispEdges">
+  <rect width="9" height="9" fill="#ffffff"/>
+  <g fill="#000000">
+    <!-- three flush squares forming the L (square) -->
+    <rect x="1" y="2" width="3" height="3"/>
+    <rect x="1" y="5" width="3" height="3"/>
+    <rect x="4" y="5" width="3" height="3"/>
+    <!-- fourth square, nudged up-right and disconnected (share) -->
+    <rect x="5" y="1" width="3" height="3"/>
+  </g>
+</svg>
