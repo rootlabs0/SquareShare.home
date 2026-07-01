@@ -1,0 +1,5 @@
+User-Agent: *
+Allow: /
+
+Host: https://squareshare.to
+Sitemap: https://squareshare.to/sitemap.xml
