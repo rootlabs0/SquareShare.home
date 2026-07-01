@@ -3,7 +3,7 @@ import type { LegalContent } from "@/components/legal/LegalDocument";
 export const termsContent: LegalContent = {
   "title": "Terms of Service",
   "subtitle": "The agreement that governs your use of Square Share, including our waitlist today and the full platform when it launches.",
-  "lastUpdated": "22 June 2026",
+  "lastUpdated": "1 July 2026",
   "disclaimer": "These documents are provided for general information only. They are a starting template generated for Square Share and should be reviewed by a qualified lawyer before launch and before processing any payments.",
   "intro": [
     {
@@ -154,6 +154,10 @@ export const termsContent: LegalContent = {
         {
           "type": "p",
           "text": "Square Share is in a **pre-launch** phase. Today, the only feature available is the **waitlist**, through which you may submit your email address so we can notify you about availability and updates."
+        },
+        {
+          "type": "note",
+          "text": "**How we use your waitlist email.** If you join the waitlist, the only personal data we collect is your **email address**, and we use it for one purpose: to **email you when Square Share launches** (plus the occasional closely related launch update). We do not sell or share it, and we do not use it for advertising. You can unsubscribe at any time. See our [Privacy Policy](/privacy) for the full detail."
         },
         {
           "type": "note",

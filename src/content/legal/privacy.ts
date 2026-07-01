@@ -3,7 +3,7 @@ import type { LegalContent } from "@/components/legal/LegalDocument";
 export const privacyContent: LegalContent = {
   "title": "Privacy Policy",
   "subtitle": "How we collect, use, and protect personal data across the Square Share platform, today and when fully launched.",
-  "lastUpdated": "22 June 2026",
+  "lastUpdated": "1 July 2026",
   "disclaimer": "These documents are provided for general information only. They are a starting template generated for Square Share and should be reviewed by a qualified lawyer before launch and before processing any payments.",
   "intro": [
     {
@@ -80,6 +80,10 @@ export const privacyContent: LegalContent = {
         {
           "type": "p",
           "text": "When you sign up to our waitlist on squareshare.to, you submit your **email address**, which we store in our database (hosted on Supabase). This is the **only** personal data we actively collect today. We use it to keep you informed about Square Share's launch and updates. You can withdraw at any time (see **Your rights**)."
+        },
+        {
+          "type": "note",
+          "text": "**In plain terms, how we use your email.** The only thing we collect from the waitlist is your **email address**, and we use it for one purpose: to **email you when Square Share launches** (and, if useful, the occasional closely related launch update in the meantime). We do **not** use it for advertising, we do **not** sell or share it, and we do **not** add you to any unrelated mailing list. You can unsubscribe at any time, after which we stop emailing you and delete your address (see **How long we keep your data** and **Your rights**)."
         },
         {
           "type": "h3",
@@ -557,7 +561,7 @@ export const privacyContent: LegalContent = {
         },
         {
           "type": "note",
-          "text": "**Last updated: 22 June 2026.** See also our [Terms of Service](/terms) and [Cookie Policy](/cookies)."
+          "text": "**Last updated: 1 July 2026.** See also our [Terms of Service](/terms) and [Cookie Policy](/cookies)."
         }
       ]
     }
