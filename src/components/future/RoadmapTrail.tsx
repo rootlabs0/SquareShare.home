@@ -145,9 +145,13 @@ export default function RoadmapTrail({
 
       const c1cy = (c1.top + c1.bot) / 2;
       const c3cy = (c3.top + c3.bot) / 2;
-      const hx = c1.left + (c1.right - c1.left) * 0.44; // head entry x into card 1
-      const x2 = c2.left + (c2.right - c2.left) * 0.32; // vertical run x in card 2
-      const ex = c3.left + (c3.right - c3.left) * 0.44; // card 3 bottom exit x
+      // Centered on each card so the trail always crosses a card's edge at that
+      // edge's midpoint: the horizontal center where it crosses a top/bottom
+      // edge, and (via c1cy/c3cy) the vertical center where it crosses a
+      // left/right edge.
+      const hx = c1.left + (c1.right - c1.left) * 0.5; // head entry x into card 1
+      const x2 = c2.left + (c2.right - c2.left) * 0.5; // vertical run x in card 2
+      const ex = c3.left + (c3.right - c3.left) * 0.5; // card 3 bottom exit x
 
       // Manhattan route — right-angle turns only:
       //   head runs up to the section's top edge -> down into card 1 -> right out
