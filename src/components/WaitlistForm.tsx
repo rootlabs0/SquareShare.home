@@ -121,6 +121,7 @@ export default function WaitlistForm({ variant = "hero" }: WaitlistFormProps) {
           // Phase 1: the checkmark draws itself in, then hands off to the card.
           <motion.div
             key="tick"
+            aria-hidden="true"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, scale: 0.96 }}
@@ -162,6 +163,8 @@ export default function WaitlistForm({ variant = "hero" }: WaitlistFormProps) {
           // Phase 2: the card slides up, with the oversized check as a watermark.
           <motion.div
             key="card"
+            role="status"
+            aria-live="polite"
             initial={reduce ? { opacity: 1 } : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}

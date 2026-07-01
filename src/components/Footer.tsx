@@ -19,6 +19,7 @@ const footerLinks = [
 const legalLinks = [
   { label: "Privacy Policy", href: "/privacy" },
   { label: "Terms of Service", href: "/terms" },
+  { label: "Accessibility", href: "/accessibility" },
 ];
 
 // Brand glyphs (simple-icons path data) — lucide dropped brand marks for

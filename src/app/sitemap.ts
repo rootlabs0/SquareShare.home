@@ -28,5 +28,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "yearly",
       priority: 0.4,
     },
+    {
+      url: absoluteUrl("/accessibility/"),
+      changeFrequency: "yearly",
+      priority: 0.4,
+    },
   ];
 }

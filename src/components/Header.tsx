@@ -35,7 +35,7 @@ export default function Header() {
             : "border-white/10 bg-black/50 shadow-lg shadow-black/20"
         }`}
       >
-        <nav className="flex h-14 items-center justify-between px-4 md:h-16 md:px-6">
+        <nav aria-label="Primary" className="flex h-14 items-center justify-between px-4 md:h-16 md:px-6">
           {/* Logo */}
           <a href="#hero" className="flex items-center gap-2.5 group" aria-label="Square Share home">
             <SquareShareLogo width={26} height={26} className="text-white" />
@@ -76,9 +76,10 @@ export default function Header() {
             onClick={() => setMenuOpen((open) => !open)}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
             className="md:hidden flex items-center justify-center w-10 h-10 text-white"
           >
-            {menuOpen ? <X size={24} /> : <Menu size={24} />}
+            {menuOpen ? <X size={24} aria-hidden="true" /> : <Menu size={24} aria-hidden="true" />}
           </button>
         </nav>
 
@@ -86,6 +87,7 @@ export default function Header() {
         <AnimatePresence>
           {menuOpen && (
             <motion.div
+              id="mobile-menu"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}

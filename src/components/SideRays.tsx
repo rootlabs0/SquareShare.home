@@ -333,6 +333,7 @@ void main() {
   return (
     <div
       ref={containerRef}
+      aria-hidden="true"
       className={`side-rays-container ${className}`.trim()}
     />
   );
